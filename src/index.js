@@ -10,6 +10,10 @@ import { Provider } from 'react-redux' // provide access to state across all com
 import thunkMiddleware from 'redux-thunk' // use for async actions
 import { BrowserRouter, Route } from 'react-router-dom'
 
+// Import Bootstrap
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+
 const store = createStore( rootReducer, applyMiddleware( thunkMiddleware ) )
 
 ReactDOM.render(

@@ -22,7 +22,7 @@ class App extends React.Component {
 
         <header>
           <span className='sessionStatus'>{ this.props.session.sessionId ? `Logged in with session id '${this.props.session.sessionId}'` : 'Logged Out' }</span>
-          { this.props.session.sessionId &&  // only render logout button if logged in 
+          { this.props.session.sessionId &&  // only render logout button if logged in
             <button className='logoutButton' onClick={ () => this.props.session.sessionId ? alert('You are already logged out') : this.props.dispatch( fetchLogout(this.props.session.sessionId, this.props.session.userId) ) }>Logout</button>
           }
           <h1>IT/CS Workshop</h1>
@@ -31,7 +31,7 @@ class App extends React.Component {
         { this.props.match.params.currentComponent === 'test' &&
           <Test />
         }
-        
+
         { (!this.props.session.sessionId || this.props.match.params.currentComponent === 'login') &&
           <Login />
         }
@@ -40,10 +40,10 @@ class App extends React.Component {
           &nbsp;
         <NavLink to='/login'>Login</NavLink>
 
-        
+
         { ( this.props.match.params.currentComponent === 'login' ) &&
           <section className='temporaryWrapper'>
-        
+
             <h3>Signup Form - Testing Only (ufl.edu emails will be used in future)</h3>
 
             <form onSubmit={ e =>
@@ -56,7 +56,7 @@ class App extends React.Component {
               {
                 this.props.dispatch( fetchSignup(email, password) )
                 // reset signup form after successful submission
-                e.target.email.value = '' 
+                e.target.email.value = ''
                 e.target.password.value = ''
               }
               else
@@ -72,7 +72,7 @@ class App extends React.Component {
 
 
 
-        
+
       </div>
     );
   }
