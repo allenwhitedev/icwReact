@@ -1,8 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import App from './components/App/App.js';
+import rootReducer from './reducers.js'
+
+import { createStore, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux' // provide access to state across all components/containers
+import thunkMiddleware from 'redux-thunk' // use for async actions
+import { BrowserRouter, Route } from 'react-router-dom'
+
+const store = createStore( rootReducer, applyMiddleware( thunkMiddleware ) )
+
+ReactDOM.render(
+	<Provider store={ store }>
+		<BrowserRouter>
+			<Route component={App} path='/:currentComponent?' />
+		</BrowserRouter>
+	</Provider>
+	, document.getElementById('root'));
 registerServiceWorker();
+
+const apiUrl = 'http://localhost:8000/api/v1' // apiUrl changes depending on environment (development/production/test)
+export default apiUrl
