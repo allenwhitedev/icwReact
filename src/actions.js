@@ -42,6 +42,28 @@ function receiveRefreshSession()
 	return { type: RECEIVE_REFRESH_SESSION }
 }
 */
+// courses
+export const REQUEST_COURSES = 'REQUEST_COURSES'
+function requestCourses()
+{
+	return { type: REQUEST_COURSES }
+}
+export const RECEIVE_COURSES = 'REQUEST_COURSES'
+function receiveCourses(data)
+{
+	return { type: RECEIVE_COURSES, items: data }
+}
+// posts by courseId
+export const REQUEST_POSTS = 'REQUEST_POSTS'
+function requestPosts()
+{
+	return { type: REQUEST_POSTS }
+}
+export const RECEIVE_POSTS = 'RECEIVE_POST'
+function receivePosts(data, courseId)
+{
+	return { type: RECEIVE_POSTS, courseId, items: data }
+}
 
 // test action creators
 export const REQUEST_TESTS = 'REQUEST_TESTS'
@@ -49,11 +71,15 @@ function requestTests()
 {
 	return { type: REQUEST_TESTS }
 }
-
 export const RECEIVE_TESTS = 'RECEIVE_TESTS'
 function receiveTests(data)
 {
 	return { type: RECEIVE_TESTS, tests: data, receivedAt: Date.now() }
+}
+export const ADD_POST = 'ADD_POST' // temporary (for demo on March 21, 2018)
+export function addPost(post, courseName)
+{
+	return { type: ADD_POST, post, courseName }
 }
 
 // - async action creators -

@@ -15,7 +15,10 @@ const store = createStore( rootReducer, applyMiddleware( thunkMiddleware ) )
 ReactDOM.render(
 	<Provider store={ store }>
 		<BrowserRouter>
-			<Route component={App} path='/:currentComponent?' />
+			<div className='BrowserRouterWrapper'>
+				<Route component={App} exact path='/:currentComponent?' />
+				<Route component={App} path='/courses/:courseName' />
+			</div>
 		</BrowserRouter>
 	</Provider>
 	, document.getElementById('root'));

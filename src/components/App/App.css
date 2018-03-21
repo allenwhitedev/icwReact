@@ -2,5 +2,9 @@
   text-align: center;
 }
 
-.sessionStatus { color: red; border: 2px solid red; padding: 10px; float: left; }
+.sessionStatus { color: red; border: 2px solid red; padding: 10px; position: absolute; z-index: 2; left: 15px; top: 15px; }
+.navLinks { position: absolute; z-index: 1; top: 15px; right: 15px; }
 .logoutButton { float: left; }
+#mytextarea { min-width: 300px; }
+.coursePost { font-size: 1.5rem; }
+.marginTop100px { margin-top: 100px; }

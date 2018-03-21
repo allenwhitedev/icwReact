@@ -1,11 +1,13 @@
 import React from 'react';
 import './App.css';
 import { connect } from 'react-redux'
-import { NavLink } from 'react-router-dom'
+import { Route, NavLink } from 'react-router-dom'
 
 import { fetchSignup, fetchLogout } from '../../actions.js'
 import Test from '../Test/Test.js'
 import Login from '../Login/Login.js'
+import Sidebar from '../Sidebar/Sidebar.js'
+import Course from '../Course/Course.js'
 
 class App extends React.Component {
 
@@ -14,6 +16,7 @@ class App extends React.Component {
     console.log('this.props', this.props)
     console.log('this.props.session', this.props.session)
     console.log('this.props.match.params', this.props.match.params)
+    console.log('this.props.match:', this.props.match)
   }
 
   render() {
@@ -28,6 +31,12 @@ class App extends React.Component {
           <h1>IT/CS Workshop</h1>
         </header>
 
+        <Sidebar courseName={this.props.params } />
+
+        { this.props.match.path.includes('/courses')  &&
+          <Course courseName={ this.props.match.params.courseName } />
+        }
+
         { this.props.match.params.currentComponent === 'test' &&
           <Test />
         }
@@ -36,9 +45,11 @@ class App extends React.Component {
           <Login />
         }
 
-        <NavLink to='/test'>Test Page</NavLink>
-          &nbsp;
-        <NavLink to='/login'>Login</NavLink>
+        <nav className='navLinks'>
+          <NavLink to='/test'>Test Page</NavLink>
+            &nbsp;
+          <NavLink to='/login'>Login</NavLink>
+        </nav>
 
         
         { ( this.props.match.params.currentComponent === 'login' ) &&
