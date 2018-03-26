@@ -122,3 +122,28 @@ export function fetchLogout(sessionId, userId)
 		.catch( error => alert(error) )
 	}
 }
+
+// *tba: courses
+export function fetchCourses(sessionId, userId)
+{
+	return dispatch =>
+	{
+		dispatch( requestCourses() )
+		console.log('*tba: add fetch courses from api routes')
+		dispatch( receiveCourses() )		
+	}
+}
+
+// *tba: posts
+export function fetchPosts()
+{
+	return dispatch =>
+	{
+		dispatch( requestPosts() )
+		console.log('*tba: add fetch posts from api routes')
+		dispatch( receivePosts() )
+	}
+}
+
+// *tba: lessons
+
