@@ -5,7 +5,7 @@ import { fetchLogin } from '../../actions.js'
 let Login = ({fetchLoginSubmit}) =>
 (
 	<div className='Login'>
-		<img className="mb-4" src="/images/icw-logo-200x100.png" alt="ICW"/>
+		<img className="mb-4" src="/images/icw-logo-200x100.png" alt="I/T CS Workshop"/>
 		<h3 className="h3 mb-3 font-weight-normal">Please sign in</h3>
 	  <form className='form-signin' onSubmit={ e =>
 	  {
@@ -35,7 +35,7 @@ let Login = ({fetchLoginSubmit}) =>
         </label>
       </div>
 	    <button className="mb-3 btn btn-lg btn-success btn-block" type='submit'>Sign in</button>
-			New to ICW? <a className="font-weight-normal" href="#">Register now.</a>
+			New to ICW? <a className="font-weight-normal" href="/login">Register now.</a>
 	  </form>
 	</div>
 )
