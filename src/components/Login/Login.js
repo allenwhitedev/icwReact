@@ -5,8 +5,9 @@ import { fetchLogin, fetchSignup } from '../../actions.js'
 let Login = ({fetchLoginSubmit, fetchSignupSubmit}) =>
 (
 	<div className='Login'>
-	  <h3>Login Form</h3>
-	  <form onSubmit={ e =>
+		<img className="mb-4" src="/images/icw-logo-200x100.png" alt="I/T CS Workshop"/>
+		<h3 className="h3 mb-3 font-weight-normal">Please sign in</h3>
+	  <form className='form-signin' onSubmit={ e =>
 	  {
 	    e.preventDefault()
 
@@ -24,11 +25,17 @@ let Login = ({fetchLoginSubmit, fetchSignupSubmit}) =>
 	    else
 	      alert('A valid email & password are required')
 	  } }>
-
-	    <input name='email' type='text' />
-	    <input name='password' type='password' />
-
-	    <button type='submit'>Login</button>
+			<label htmlFor="inputEmail" className="sr-only">Email address</label>
+	    <input name='email' type='text' id="inputEmail" className="form-control" placeholder="Email address" autoFocus />
+			<label htmlFor="inputPassword" className="sr-only">Password</label>
+	    <input name='password' type='password' id="inputPassword" className="form-control" placeholder="Password"/>
+			<div className="checkbox mb-3">
+        <label htmlFor="remember-me">
+          <input type="checkbox" value="remember-me" id="remember-me" /> Remember me
+        </label>
+      </div>
+	    <button className="mb-3 btn btn-lg btn-success btn-block" type='submit'>Sign in</button>
+			New to ICW? <a className="font-weight-normal" href="/login">Register now.</a>
 	  </form>
 
     <h3>Signup Form - Testing Only (ufl.edu emails will be used in future)</h3>
@@ -56,7 +63,6 @@ let Login = ({fetchLoginSubmit, fetchSignupSubmit}) =>
 
 	</div>
 )
-
 
 const mapDispatchToProps = dispatch => ({
 	fetchLoginSubmit: (email, password) => dispatch( fetchLogin(email, password) ),
