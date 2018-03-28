@@ -3,8 +3,9 @@ import './App.css';
 import { connect } from 'react-redux'
 import {  NavLink } from 'react-router-dom'
 
-import { fetchLogout } from '../../actions.js'
+import { fetchSignup, fetchLogout } from '../../actions.js'
 import Test from '../Test/Test.js'
+import Login from '../Login/Login.js'
 import Sidebar from '../Sidebar/Sidebar.js'
 import Course from '../Course/Course.js'
 
