@@ -1,13 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { fetchLogin, fetchSignup } from '../../actions.js'
+import './Login.css'
 
 let Login = ({fetchLoginSubmit, fetchSignupSubmit}) =>
 (
 	<div className='Login'>
-		<img className="mb-4" src="/images/icw-logo-200x100.png" alt="I/T CS Workshop"/>
-		<h3 className="h3 mb-3 font-weight-normal">Please sign in</h3>
-	  <form className='form-signin' onSubmit={ e =>
+		<img className="mb-4 center-block" src="/images/icw-logo-200x100.png" alt="I/T CS Workshop"/>
+		<h3 className="h3 mb-3 text-center font-weight-normal">Please sign in</h3>
+	  <form className='form-signin text-center' onSubmit={ e =>
 	  {
 	    e.preventDefault()
 
@@ -37,9 +38,9 @@ let Login = ({fetchLoginSubmit, fetchSignupSubmit}) =>
 	    <button className="mb-3 btn btn-lg btn-success btn-block" type='submit'>Sign in</button>
 			New to ICW? <a className="font-weight-normal" href="/login">Register now.</a>
 	  </form>
-
+		<hr></hr>
     <h3>Signup Form - Testing Only (ufl.edu emails will be used in future)</h3>
-    <form onSubmit={ e =>
+    <form className='form-signin text-center' onSubmit={ e =>
     {
       e.preventDefault()
       let email = e.target.email.value.trim()
@@ -55,11 +56,13 @@ let Login = ({fetchLoginSubmit, fetchSignupSubmit}) =>
       else
         alert('A valid email & password are required')
     } }>
-      <input name='email' type='text' />
-      <input name='password' type='password' />
+		<label htmlFor="inputEmail" className="sr-only">Email address</label>
+		<input name='email' type='text' id="inputEmail" className="form-control" placeholder="Email address" autoFocus />
+		<label htmlFor="inputPassword" className="sr-only">Password</label>
+		<input name='password' type='password' id="inputPassword" className="form-control" placeholder="Password"/>
 
-      <button type='submit'>Sign Up</button>
-    </form>	  
+      <button className="mb-3 btn btn-lg btn-success btn-block" type='submit'>Sign Up</button>
+    </form>
 
 	</div>
 )
