@@ -1,25 +1,56 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
+import { fetchCourses, fetchAddCourse } from '../../actions.js'
 import './Sidebar.css'
 
-let Sidebar = ({courses, courseName}) =>
-(
-	<div className='Sidebar'>
-		<ul style={ {listStyle: 'none', textAlign: 'center'} }>
-		{
-			courses.map( (course, index) => 
-			(
-				<li key={index}> <NavLink to={`/courses/${course.courseName}`}>{course.courseName}</NavLink> </li>
-			) )
-		}
-		</ul>
-		
-	</div>
-)
+class Sidebar extends React.Component 
+{ 
+	//({courses, courseName}) 
+	componentDidMount()
+	{
+		if ( this.props.session.expiresAt && this.props.session.expiresAt > Date.now() ) // fetch courses when component mounts if session is not expired
+			this.props.fetchCourses(this.props.session.sessionId, this.props.session.userId)
+	}
+
+	render()
+	{
+		return (
+			<div className='Sidebar'>
+				<ul style={ {listStyle: 'none', textAlign: 'center'} }>
+				{
+					this.props.courses.map( (course, index) => 
+					(
+						<li key={index}> <NavLink to={`/courses/${course.name}`}>{course.name}</NavLink> </li>
+					) )
+				}
+				</ul>
+				
+
+				<form onSubmit={ e =>
+				{
+					e.preventDefault()
+					
+					alert(`tba submit new course '${e.target.newCourse.value}'`)
+					// e.target.newCourse.value == '' // reset course input after submit
+				}  }>
+					<input name='newCourse' type='text' />
+					<button type='submit'>Add</button>
+				</form>
+			</div>
+		)
+	}
+}
 
 const mapStateToProps = state => ({
-	courses: state.courses.items
+	courses: state.courses.items,
+	session: state.session
 })
 
-export default connect(mapStateToProps)(Sidebar)
+const mapDispatchToProps = dispatch => ({
+	addCourseSubmit: courseName => dispatch( fetchAddCourse(courseName) ),
+	fetchCourses: (sessionId, userId) => dispatch ( fetchCourses(sessionId, userId) )
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)

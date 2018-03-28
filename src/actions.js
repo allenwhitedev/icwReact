@@ -1,4 +1,4 @@
-import apiUrl from './index.js'
+const apiUrl = 'http://localhost:8000/api/v1' // apiUrl changes depending on environment (development/production/test)
 
 // - synchronous action creators -
 // signup
@@ -48,10 +48,25 @@ function requestCourses()
 {
 	return { type: REQUEST_COURSES }
 }
-export const RECEIVE_COURSES = 'REQUEST_COURSES'
+export const RECEIVE_COURSES = 'RECEIVE_COURSES'
 function receiveCourses(data)
 {
 	return { type: RECEIVE_COURSES, items: data }
+}
+export const RECEIVE_COURSE_ITEMS = 'RECEIVE_COURSE_ITEMS'
+// function receiveCourseItems(data)
+// {
+// 	return { type: RECEIVE_COURSE_ITEMS, courses: data }
+// }
+export const REQUEST_ADD_COURSE = 'REQUEST_ADD_COURSE'
+function requestAddCourse(courseName)
+{
+	return { type: REQUEST_ADD_COURSE, courseName }
+}
+export const RECEIVE_ADD_COURSE = 'RECEIVE_ADD_COURSE'
+function receiveAddCourse(courseName)
+{
+	return { type: RECEIVE_ADD_COURSE, courseName }
 }
 // posts by courseId
 export const REQUEST_POSTS = 'REQUEST_POSTS'
@@ -76,10 +91,10 @@ function receiveTests(data)
 {
 	return { type: RECEIVE_TESTS, tests: data, receivedAt: Date.now() }
 }
-export const ADD_POST = 'ADD_POST' // temporary (for demo on March 21, 2018)
-export function addPost(post, courseName)
+export const ADD_COURSE_ITEM = 'ADD_POST' // temporary (for demo on March 21, 2018)
+export function addCourseItem(post, courseName)
 {
-	return { type: ADD_POST, post, courseName }
+	return { type: ADD_COURSE_ITEM, post, courseName }
 }
 
 // - async action creators -
@@ -97,7 +112,6 @@ export function fetchSignup(email, password)
 	return dispatch =>
 	{
 		dispatch(requestSignup)
-		console.log('body:', JSON.stringify({email, password}) )
 		fetch(`${apiUrl}/signup`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password}) }).then( response => response.json() ).then( data => dispatch( receiveSignup(data) ) )
 		.catch( error => alert('Invalid email/password, email may already be in use') /*alert(error)*/ )		
 	}
@@ -118,7 +132,7 @@ export function fetchLogout(sessionId, userId)
 	return dispatch =>
 	{
 		dispatch( requestLogout() )
-		fetch(`${apiUrl}/logout`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({sessionId, userId}) } ).then( response => response.json() ).then( data => dispatch(receiveLogout) )
+		fetch(`${apiUrl}/logout`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({sessionId, userId}) } ).then( response => response.json() ).then( data => dispatch( receiveLogout() ) )
 		.catch( error => alert(error) )
 	}
 }
@@ -128,9 +142,20 @@ export function fetchCourses(sessionId, userId)
 {
 	return dispatch =>
 	{
+		let sessionCookie = `sessionId=${sessionId}; userId=${userId};`
 		dispatch( requestCourses() )
-		console.log('*tba: add fetch courses from api routes')
-		dispatch( receiveCourses() )		
+		fetch(`${apiUrl}/courses`, {headers: {'Session': sessionCookie}}).then( response => response.json() ).then( data => { dispatch( receiveCourses(data) ); /*dispatch( receiveCourseItems(data)*/ } )
+			.catch( error => alert('Error from /courses ' + error) )	
+	}
+}
+
+export function fetchAddCourse(courseName)
+{
+	return dispatch =>
+	{
+		dispatch( requestAddCourse(courseName) ) // provide course name for optimistic ui
+		fetch(`${apiUrl}/courses`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({courseName})}).then( response => response.json() ).then( data => dispatch( receiveAddCourse(courseName) ) )
+			.catch( error => alert(error) )		
 	}
 }
 

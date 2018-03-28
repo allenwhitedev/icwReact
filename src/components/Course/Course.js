@@ -1,33 +1,33 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addPost } from '../../actions.js'
+import { addCourseItem } from '../../actions.js'
 import CKEditor from '../CKEditor/CKEditor.js'
 
-let Course = ({courseName, posts, addPostClick}) =>
+let Course = ({courseName, courseItems, addCourseItemClick}) =>
 (
 	<div className='Course' style={ {padding: '15px'} }>
 		<h2> {courseName} </h2>
 
 		<ul style={ {listStyle: 'none'} }>
-			{ posts.map( (post, index) => 
+			{ courseItems.map( (courseItem, index) => 
 				(
-					<li key={index} className='coursePost' dangerouslySetInnerHTML={ {__html: post} } ></li>
+					<li key={index} className='coursePost' dangerouslySetInnerHTML={ {__html: courseItem} } ></li>
 				) )
 			}
 		</ul>
 
-    <CKEditor addPostClick={ addPostClick } />
+    <CKEditor addPostClick={ addCourseItemClick } />
 
 	</div>
 )
 
 const mapStateToProps = (state, ownProps) => ({
 	courseName: ownProps.courseName,
-	posts: state.posts[ownProps.courseName] ? state.posts[ownProps.courseName] : [] //state.posts.courseName['post one', 'post two']
+	courseItems: state.courseItems[ownProps.courseName] ? state.courseItems[ownProps.courseName] : [] //state.posts.courseName['post one', 'post two']
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	addPostClick: (post) => dispatch( addPost(post, ownProps.courseName) )
+	addCourseItemClick: (post) => dispatch( addCourseItem(post, ownProps.courseName) )
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Course)
