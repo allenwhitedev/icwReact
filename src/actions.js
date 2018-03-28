@@ -91,6 +91,11 @@ function receiveTests(data)
 {
 	return { type: RECEIVE_TESTS, tests: data, receivedAt: Date.now() }
 }
+export const ADD_COURSE = 'ADD_COURSE' // temporary (for demo on March 21, 2018)
+export function addCourse(name)
+{
+	return { type: ADD_COURSE, course: {name, _id: 'temporaryIdHere'} }
+}
 export const ADD_COURSE_ITEM = 'ADD_POST' // temporary (for demo on March 21, 2018)
 export function addCourseItem(post, courseName)
 {

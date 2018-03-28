@@ -9,7 +9,7 @@ import {
 	REQUEST_POSTS, RECEIVE_POSTS, // posts by courseId action types
 	REQUEST_TESTS, RECEIVE_TESTS, // tests action types
 	RECEIVE_COURSE_ITEMS, // course items are returned in same fetch that gets courses from backend
-	ADD_COURSE_ITEM// temporary, used for demo
+	ADD_COURSE_ITEM, ADD_COURSE // temporary, used for demo
 } from './actions.js'
 
 const rootReducer = combineReducers({
@@ -76,6 +76,8 @@ function courses(state = { isFetching: false, items: [{_id: '0ab', name: 'Offlin
 			return { isFetching: true, ...state }
 		case RECEIVE_COURSES:	
 			return { isFetching: false, items: action.items }
+		case ADD_COURSE: // temporary, used for demo
+			return { ...state, items: [...state.items, action.course] }
 		default:
 			return state
 	}

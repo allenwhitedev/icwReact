@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { fetchCourses, fetchAddCourse } from '../../actions.js'
+import { fetchCourses, fetchAddCourse, addCourse} from '../../actions.js'
 import './Sidebar.css'
 
 class Sidebar extends React.Component 
@@ -30,9 +30,10 @@ class Sidebar extends React.Component
 				<form onSubmit={ e =>
 				{
 					e.preventDefault()
-					
-					alert(`tba submit new course '${e.target.newCourse.value}'`)
-					// e.target.newCourse.value == '' // reset course input after submit
+
+					let courseName = e.target.newCourse.value
+					this.props.addCourseSubmit( courseName )
+					e.target.newCourse.value = '' // reset course input after submit
 				}  }>
 					<input name='newCourse' type='text' />
 					<button type='submit'>Add</button>
@@ -49,7 +50,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	addCourseSubmit: courseName => dispatch( fetchAddCourse(courseName) ),
-	fetchCourses: (sessionId, userId) => dispatch ( fetchCourses(sessionId, userId) )
+	fetchCourses: (sessionId, userId) => dispatch ( fetchCourses(sessionId, userId) ),
+	addCourseSubmit: (name) => dispatch( addCourse(name) ) // temporary, used for demo
 })
 
 
