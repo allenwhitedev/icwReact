@@ -21,10 +21,10 @@ ReactDOM.render(
 	<Provider store={ store }>
 		<BrowserRouter>
 			<div className='BrowserRouterWrapper'>
-				{ ( !store.getState().session.expiresAt || !store.getState().session.expiresAt > Date.now() ) && // temporary redirec to login if user session is not defined
+				{ ( !store.getState().session.expiresAt || !store.getState().session.expiresAt > Date.now() ) && // temporary redirect to login if user session is not defined
 					<Redirect to='/login' />	
 				}
-				<Route component={Login} path = '/login' />
+				<Route component={Login} path='/login' />
 				<Route component={ store.getState().session.expiresAt && store.getState().session.expiresAt > Date.now() ? App : null} exact path='/:currentComponent?' />
 				<Route component={App} path='/courses/:courseName' />
 			</div>

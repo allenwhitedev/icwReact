@@ -21,15 +21,9 @@ class App extends React.Component {
     return (
       <div className="App">
 
-        <div className="navLinks d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-          <img alt="IT/CS Workshop" src="/images/icw-logo-128x90.png" />
-          <nav className="my-2 my-md-0 mr-md-3">
-            <NavLink className="p-2 text-dark" to="/test">Test Page</NavLink>
-            <NavLink className="p-2 text-dark" to="/login">Login</NavLink>
-            <NavLink className="btn btn-outline-success" to="/login">Register</NavLink>
-          </nav>
-
-        </div>
+        <nav className='navLinks'>
+          <NavLink to='/test'>Test Page</NavLink>
+        </nav>
 
         <header>
           <span className='sessionStatus'>{ this.props.session.sessionId ? `Logged in with session id '${this.props.session.sessionId}'` : 'Logged Out' }</span>
@@ -39,6 +33,13 @@ class App extends React.Component {
         </header>
 
         <Sidebar courseName={this.props.params } />
+
+        { this.props.match.url === '/' &&
+          <section className='homeBanner'>
+            <h1>Welcome</h1>
+            <h2>This is the home page.</h2>
+          </section>
+        }
 
         <main className='main'>
           { this.props.match.path.includes('/courses')  &&

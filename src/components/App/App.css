@@ -1,7 +1,7 @@
 .App {
   text-align: center;
 }
-
+.navLinks { position: absolute; z-index: 1; top: 15px; right: 15px; }
 .sessionStatus { color: red; border: 2px solid red; padding: 10px; position: absolute; z-index: 2; left: 15px; top: 15px; }
 .logoutButton { position: absolute; top: 45px; right: 40px; z-index: 2; }
 #mytextarea { min-width: 300px; }

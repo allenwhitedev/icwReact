@@ -61,7 +61,10 @@ function session(state, action)
 			console.log(`'session reducer's case REFRESH_SESSION tba`)
 			return state
 		default:
-			return {isFetching: false, userId: localStorage.getItem('userId'), sessionId: localStorage.getItem('sessionId'), expiresAt: parseInt(localStorage.getItem('expiresAt'), 10) } // by default load session from localStorage
+			if ( parseInt(localStorage.getItem('expiresAt'), 10) > Date.now() ) // do not load session from localStorage if it is expired
+				return {isFetching: false, userId: localStorage.getItem('userId'), sessionId: localStorage.getItem('sessionId'), expiresAt: parseInt(localStorage.getItem('expiresAt'), 10) } // by default load session from localStorage
+			else
+				return { isFetching: false }
 	}
 }
 
