@@ -42,8 +42,8 @@ class App extends React.Component {
         }
 
         <main className='main'>
-          { this.props.match.path.includes('/courses')  &&
-            <Course courseName={ this.props.match.params.courseName } />
+          { ( this.props.match.path.includes('/courses') && this.props.location.pathname.match( new RegExp('/', 'g') ).length < 3 )  &&
+            <Course courseId={ this.props.match.params.courseId } />
           }
 
           { this.props.match.params.currentComponent === 'test' &&

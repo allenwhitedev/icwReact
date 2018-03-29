@@ -21,7 +21,7 @@ class Sidebar extends React.Component
 				{
 					this.props.courses.map( (course, index) => 
 					(
-						<li key={index}> <NavLink to={`/courses/${course.name}`}>{course.name}</NavLink> </li>
+						<li key={index}> <NavLink to={`/courses/${course._id}`}>{course.name}</NavLink> </li>
 					) )
 				}
 				</ul>
@@ -35,7 +35,7 @@ class Sidebar extends React.Component
 					this.props.fetchAddCourseSubmit( courseName )
 					e.target.newCourse.value = '' // reset course input after submit
 				}  }>
-					<input name='newCourse' type='text' placeholder='New Course...' minlength='4' maxlength='24' />
+					<input name='newCourse' type='text' placeholder='New Course...' minLength='4' maxLength='24' />
 					<button type='submit'>Add</button>
 				</form>
 			</div>

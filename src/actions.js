@@ -69,10 +69,10 @@ function receiveCourses(data)
 	return { type: RECEIVE_COURSES, items: data }
 }
 export const RECEIVE_COURSE_ITEMS = 'RECEIVE_COURSE_ITEMS'
-// function receiveCourseItems(data)
-// {
-// 	return { type: RECEIVE_COURSE_ITEMS, courses: data }
-// }
+function receiveCourseItems(data)
+{
+	return { type: RECEIVE_COURSE_ITEMS, courses: data }
+}
 export const REQUEST_ADD_COURSE = 'REQUEST_ADD_COURSE'
 function requestAddCourse(courseName)
 {
@@ -82,6 +82,16 @@ export const RECEIVE_ADD_COURSE = 'RECEIVE_ADD_COURSE'
 function receiveAddCourse(courseName)
 {
 	return { type: RECEIVE_ADD_COURSE }
+}
+export const REQUEST_ADD_COURSE_ITEM = 'REQUEST_ADD_COURSE_ITEM'
+function requestAddCourseItem(courseId)
+{
+	return { type: REQUEST_ADD_COURSE_ITEM, courseId }
+}
+export const RECEIVE_ADD_COURSE_ITEM = 'RECEIVE_COURSE_ITEM'
+function receiveAddCourseItem(data)
+{
+	return { type: RECEIVE_ADD_COURSE_ITEM, courseItem: data }
 }
 // posts by courseId
 export const REQUEST_POSTS = 'REQUEST_POSTS'
@@ -126,7 +136,7 @@ export function fetchLogin(email, password)
 	return dispatch =>
 	{
 		dispatch( requestLogin() )
-		fetch(`${apiUrl}/login`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password}) }).then( response => response.json() ).then( data => { alert('data from login:' + JSON.stringify(data) ); dispatch( receiveLogin(data) ) } )
+		fetch(`${apiUrl}/login`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password}) }).then( response => response.json() ).then( data => dispatch( receiveLogin(data) ) )
 		.catch( error => alert('Invalid email/password') /*alert(error)*/ )
 	}
 }
@@ -150,7 +160,7 @@ export function fetchCourses()
 		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
 		
 		dispatch( requestCourses() )
-		fetch(`${apiUrl}/courses`, {headers: {'Session': sessionCookie}}).then( response => response.json() ).then( data => { dispatch( receiveCourses(data) ); /*dispatch( receiveCourseItems(data)*/ } )
+		fetch(`${apiUrl}/courses`, {headers: {'Session': sessionCookie}}).then( response => response.json() ).then( data => { dispatch( receiveCourses(data) ); dispatch( receiveCourseItems(data) ) } )
 			.catch( error => alert('Error: Could not fetch courses. ' + error) )	
 	}
 }
@@ -166,6 +176,20 @@ export function fetchAddCourse(courseName)
 		fetch(`${apiUrl}/courses`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie }, body: JSON.stringify({name: courseName})}).then( response => response.json() )
 			.then( data => { dispatch( receiveAddCourse(courseName) ); dispatch( fetchCourses() ) } )
 			.catch( error => alert(`Error: Could not add course '${courseName}'. Are you logged in with a 'teacher' user? ${error}`) )		
+	}
+}
+
+export function fetchAddCourseItem(courseItem, courseId)
+{
+	return (dispatch, getState) =>
+	{
+		let session = getState().session
+		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
+		
+		dispatch( requestAddCourseItem(courseId) )
+		fetch(`${apiUrl}/courses/${courseId}`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify(courseItem) })
+			.then( response => response.json() ).then( data => { dispatch( receiveAddCourseItem(data) ); dispatch( fetchCourses() ) } ) // fetch courses as db may perform some operations on courseItem content to make it safe 
+			.catch( error => alert(`Error: Could not add item to course with id '${courseId}'. Are you logged in with a 'teacher' user? ${error}`) )			
 	}
 }
 

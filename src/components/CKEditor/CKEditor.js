@@ -9,12 +9,21 @@ export default class CKEditor extends React.Component {
 		return (
 			<div className='CKEditor'>
 				<textarea name='editor1' id='editor1'></textarea>
-				<button onClick={ () => 
+				<form onSubmit={ (e) => 
 					{
-						let post = window.CKEDITOR.instances.editor1.getData()
-						this.props.addPostClick(post) // add post (inherited prop from Course)
+						e.preventDefault()
+						let title = e.target.title.value
+						let content = window.CKEDITOR.instances.editor1.getData()
+						
+						this.props.fetchAddCourseItemClick({type: 'lesson', title, content}) // (inherited prop from Course)
+						
 						window.CKEDITOR.instances.editor1.setData('') // reset advanced html editor					
-					} }>Submit Advanced HTML Editor</button>
+						e.target.title.value = '' // reset lesson title
+					} }>
+					<br />
+					<input name='title' minLength='1' placeholder='Lesson Title...' />
+					<button type='submit'>Submit Lesson</button>
+					</form>
 			</div>
 		)
 	}

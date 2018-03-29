@@ -90,7 +90,15 @@ function courses(state = { isFetching: false, items: [{_id: '0ab', name: 'Offlin
 }
 
 
-function courseItems(state = { isFetching: false, 'CEN3010 - Software Engineering': ['post one', 'post two'] }, action)
+function normalizeCourseItems(courses) // database store prefers denormalized data, redux prefers normalized data structure (haven't verified it sufficently normalizes data)
+{
+	let courseItems = []
+	for ( let i in courses )
+		for ( let j in courses[i].items )
+			courseItems.push({courseId: courses[i]._id, ...courses[i].items[j]})
+	return courseItems
+}
+function courseItems(state = { isFetching: false, items: [] }, action)
 {
 	switch (action.type)
 	{
@@ -104,14 +112,7 @@ function courseItems(state = { isFetching: false, 'CEN3010 - Software Engineerin
 		case RECEIVE_POSTS:
 			return { isFetching: false, [action.courseName]: action.items }
 		case RECEIVE_COURSE_ITEMS:
-			return state
-			// return [ ...state, action.courses.map( course => 
-			// {
-			// 	if ( course.items.length > 0 )
-			// 		return course.items
-			// 	else
-			// 		return
-			// } ) ]
+			return { ...state, items: normalizeCourseItems(action.courses) }
 		default:
 			return state
 	}
