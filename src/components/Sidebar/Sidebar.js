@@ -19,32 +19,39 @@ class Sidebar extends React.Component
 		<div>
  			<nav className="sidenav">
     		<ul>
+
 					<NavLink to="/">
-						<a href="#0">
+						<a className="text-center logo" href="#0">
 							<img src="/img/icw-logo-128x90.png" alt="IT/CS Workshop" />
 						</a>
 					</NavLink>
-       		<li data-toggle="collapse" data-target="#user-options" className="has-children user">
-							<img className="avatar" src="/img/cd-avatar.png" alt="avatar" /> First Last
-							<ul id="user-options" className="collapse">
-								<li>Logout</li>
-								<li>Settings</li>
-							</ul>
+
+       		<li className="user dropdown-btn">
+							<span className="fa fa-3x fa-user-circle"></span><span className="user-span">First Last</span>
 					</li>
-					<li className="has-children notifications">
-						<a href="#0">Workshop<span className="count">3</span></a>
-						<ul>
-               <li><a href="#0">Midterm Presentation 2</a></li>
-            </ul>
+					<ul className="user dropdown-container" id="user-options">
+						<li><a href="#0"><span className="fa fa-sign-out"></span> Logout</a></li>
+						<li><a href="#0"><span className="fa fa-cog"></span> Settings</a></li>
+					</ul>
+
+					<hr></hr>
+
+					<li className="workshop dropdown-btn notifications">
+						<a href="#0"><span className="fa fa-pencil"></span> Workshop<span className="count">1</span></a>
 					</li>
-					<li className="has-children bookmarks">
-						<a href="#0">Courses</a>
-						<ul>
-               <li><a href="#0">CEN3031: Introduction to Software Engineering</a></li>
-               <li><a href="#0">CNT4007C: Computer Network Fundamentals</a></li>
-							 <li><a href="#0">CEN4914/CIS4914: CISE Design 2</a></li>
-            </ul>
+					<ul className="workshop dropdown-container">
+             <li><a href="#0">Midterm Presentation 2</a></li>
+          </ul>
+
+					<li className="courses dropdown-btn bookmarks">
+						<a href="#0"><span className="fa fa-book"></span> Courses</a>
 					</li>
+					<ul className="courses dropdown-container">
+             <li><a href="#0">CEN3031: Introduction to Software Engineering</a></li>
+             <li><a href="#0">CNT4007C: Computer Network Fundamentals</a></li>
+						 <li><a href="#0">CEN4914/CIS4914: CISE Design 2</a></li>
+          </ul>
+
         </ul>
  			</nav>
 			<div>
