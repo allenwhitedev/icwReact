@@ -6,8 +6,8 @@ import './Login.css'
 let Login = ({fetchLoginSubmit, fetchSignupSubmit, currentForm, location}) =>
 (
 	<div className='Login'>
-		<img className="mb-4 center-block" src="/images/icw-logo-200x100.png" alt="I/T CS Workshop"/>
-		
+		<img className="mb-4 center-block" src="/img/icw-logo-200x100.png" alt="I/T CS Workshop"/>
+
 	  { ( !location || !location.hash || location.hash !== '#signup' ) &&
 		  <form className='form-signin text-center' onSubmit={ e =>
 		  {
@@ -33,7 +33,7 @@ let Login = ({fetchLoginSubmit, fetchSignupSubmit, currentForm, location}) =>
 				<label htmlFor="inputPassword" className="sr-only">Password</label>
 		    <input name='password' type='password' id="inputPassword" className="form-control" placeholder="Password"/>
 				<div className="checkbox mb-3">
-	        <label htmlFor="remember-me">
+	        <label id="remember-me" htmlFor="remember-me">
 	          <input type="checkbox" value="remember-me" id="remember-me" /> Remember me
 	        </label>
 	      </div>

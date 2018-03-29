@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { connect } from 'react-redux'
-import {  NavLink } from 'react-router-dom'
+// import {  NavLink } from 'react-router-dom'
 
 import { fetchSignup, fetchLogout } from '../../actions.js'
 import Test from '../Test/Test.js'
@@ -21,25 +21,7 @@ class App extends React.Component {
     return (
       <div className="App">
 
-        <nav className='navLinks'>
-          <NavLink to='/test'>Test Page</NavLink>
-        </nav>
-
-        <header>
-          <span className='sessionStatus'>{ this.props.session.sessionId ? `Logged in with session id '${this.props.session.sessionId}'` : 'Logged Out' }</span>
-          { this.props.session.sessionId &&  // only render logout button if logged in
-            <button className='logoutButton' onClick={ () => this.props.session.sessionId ? this.props.dispatch( fetchLogout(this.props.session.sessionId, this.props.session.userId) ) : alert('You are already logged out') }>Logout</button>
-          }
-        </header>
-
-        <Sidebar courseName={this.props.params } />
-
-        { this.props.match.url === '/' &&
-          <section className='homeBanner'>
-            <h1>Welcome</h1>
-            <h2>This is the home page.</h2>
-          </section>
-        }
+      <Sidebar courseName={this.props.params } />
 
         <main className='main'>
           { this.props.match.path.includes('/courses')  &&
