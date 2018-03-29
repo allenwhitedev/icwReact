@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 
 const CourseItem = ({courseItem}) =>
 (
-	<div className='CourseItem'>
+	<div className='CourseItem' style={ {paddingLeft: '315px'} }>
 		<h2>{ courseItem.title }</h2>
 		<hr />
-		<section className='courseItemContent' dangerouslySetInnerHTML={ {__html: courseItem.content} }></section>
+		<section style={ {padding: '15px'} } className='courseItemContent' dangerouslySetInnerHTML={ {__html: courseItem.content} }></section>
 	</div>
 )
 
