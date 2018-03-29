@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { fetchCourses, fetchAddCourse } from '../../actions.js'
+import { fetchCourses, fetchAddCourse, fetchLogout } from '../../actions.js'
 import './Sidebar.css'
 
 class Sidebar extends React.Component
@@ -20,17 +20,17 @@ class Sidebar extends React.Component
  			<nav className="sidenav">
     		<ul>
 
-					<NavLink to="/">
-						<a className="text-center logo" href="#0">
-							<img src="/img/icw-logo-128x90.png" alt="IT/CS Workshop" />
-						</a>
+					<NavLink className="text-center logo" to="/">
+						<img src="/img/icw-logo-128x90.png" alt="IT/CS Workshop" />
 					</NavLink>
 
        		<li className="user dropdown-btn">
 							<span className="fa fa-3x fa-user-circle"></span><span className="user-span">First Last</span>
 					</li>
 					<ul className="user dropdown-container" id="user-options">
-						<li><a href="#0"><span className="fa fa-sign-out"></span> Logout</a></li>
+						{ this.props.session.sessionId &&
+						<li><a href="#" onClick={ () => this.props.dispatch( fetchLogout(this.props.session.sessionId, this.props.session.userId) ) }><span className="fa fa-sign-out"></span> Logout</a></li>
+						}
 						<li><a href="#0"><span className="fa fa-cog"></span> Settings</a></li>
 					</ul>
 
@@ -54,12 +54,6 @@ class Sidebar extends React.Component
 
         </ul>
  			</nav>
-			<div>
-				<section className="heading">
-					<h1>Dashboard</h1>
-					<hr></hr>
-				</section>
-			</div>
 		</div>
 
 

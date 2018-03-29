@@ -22,7 +22,7 @@ ul {
       padding: 6px 8px 6px 16px;
 }
 
-.sidenav a .logo {
+.sidenav .logo {
   padding-left: 8px;
 }
 
@@ -37,6 +37,9 @@ ul {
 
 .sidenav .user.dropdown-btn {
   padding: 2px 16px;
+}
+.sidenav .user.dropdown-btn:hover {
+  cursor: pointer;
 }
 
 .sidenav a:hover {
