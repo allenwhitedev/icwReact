@@ -9,7 +9,8 @@ import {
 	REQUEST_POSTS, RECEIVE_POSTS, // posts by courseId action types
 	REQUEST_TESTS, RECEIVE_TESTS, // tests action types
 	RECEIVE_COURSE_ITEMS, // course items are returned in same fetch that gets courses from backend
-	ADD_COURSE_ITEM, ADD_COURSE // temporary, used for demo
+	ADD_COURSE_ITEM, // temporary, used for demo
+	REQUEST_ADD_COURSE, RECEIVE_ADD_COURSE 
 } from './actions.js'
 
 const rootReducer = combineReducers({
@@ -40,21 +41,23 @@ function session(state, action)
 			return { isFetching: true, ...state, }
 		case RECEIVE_SIGNUP:
 			// save session in localStorage to persist
-			localStorage.setItem('userId', action.session.userId); localStorage.setItem('sessionId', action.session.sessionId); localStorage.setItem('expiresAt', action.session.expiresAt)
+			localStorage.setItem('userId', action.session.userId); localStorage.setItem('sessionId', action.session.sessionId) 
+			localStorage.setItem('expiresAt', action.session.expiresAt); localStorage.setItem('role', action.session.role)
 			window.location.reload() // temporary method of redirect
-			return { isFetching: false, userId: action.session.userId, sessionId: action.session.sessionId, expiresAt: action.session.expiresAt }
+			return { isFetching: false, userId: action.session.userId, sessionId: action.session.sessionId, expiresAt: action.session.expiresAt, role: action.session.role }
 		case REQUEST_LOGIN:
 			return { isFetching: true, ...state }
 		case RECEIVE_LOGIN:
 			// save session in localStorage to persist
-			localStorage.setItem('userId', action.session.userId); localStorage.setItem('sessionId', action.session.sessionId); localStorage.setItem('expiresAt', action.session.expiresAt)
+			localStorage.setItem('userId', action.session.userId); localStorage.setItem('sessionId', action.session.sessionId)
+			localStorage.setItem('expiresAt', action.session.expiresAt); localStorage.setItem('role', action.session.role)
 			window.location.reload() // temporary method of redirect
-			return { isFetching: false, userId: action.session.userId, sessionId: action.session.sessionId, expiresAt: action.session.expiresAt }
+			return { isFetching: false, userId: action.session.userId, sessionId: action.session.sessionId, expiresAt: action.session.expiresAt, role: action.session.role }
 		case REQUEST_LOGOUT:
 			return { isFetching: true }
 		case RECEIVE_LOGOUT:
 			// save session in localStorage to persist
-			localStorage.removeItem('userId'); localStorage.removeItem('sessionId'); localStorage.removeItem('expiresAt')
+			localStorage.removeItem('userId'); localStorage.removeItem('sessionId'); localStorage.removeItem('expiresAt'); localStorage.removeItem('role')
 			window.location.reload() // temporary method of redirect
 			return { isFetching: false } // wipe all session data except isFetching			
 		case RECEIVE_REFRESH_SESSION:
@@ -62,7 +65,8 @@ function session(state, action)
 			return state
 		default:
 			if ( parseInt(localStorage.getItem('expiresAt'), 10) > Date.now() ) // do not load session from localStorage if it is expired
-				return {isFetching: false, userId: localStorage.getItem('userId'), sessionId: localStorage.getItem('sessionId'), expiresAt: parseInt(localStorage.getItem('expiresAt'), 10) } // by default load session from localStorage
+				return {isFetching: false, userId: localStorage.getItem('userId'), sessionId: localStorage.getItem('sessionId'), 
+					expiresAt: parseInt(localStorage.getItem('expiresAt'), 10), role: localStorage.getItem('role') } // by default load session from localStorage
 			else
 				return { isFetching: false }
 	}
@@ -76,8 +80,10 @@ function courses(state = { isFetching: false, items: [{_id: '0ab', name: 'Offlin
 			return { isFetching: true, ...state }
 		case RECEIVE_COURSES:	
 			return { isFetching: false, items: action.items }
-		case ADD_COURSE: // temporary, used for demo
-			return { ...state, items: [...state.items, action.course] }
+		case REQUEST_ADD_COURSE: // temporary, used for demo
+			return { isFetching: true, items: [...state.items, {_id: `'optimisticUITempId${state.items.length}`, name: action.courseName }] }
+		case RECEIVE_ADD_COURSE:
+			return { isFetching: false, ...state }
 		default:
 			return state
 	}

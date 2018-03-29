@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { fetchCourses, fetchAddCourse, addCourse} from '../../actions.js'
+import { fetchCourses, fetchAddCourse } from '../../actions.js'
 import './Sidebar.css'
 
 class Sidebar extends React.Component 
@@ -10,7 +10,7 @@ class Sidebar extends React.Component
 	componentDidMount()
 	{
 		if ( this.props.session.expiresAt && this.props.session.expiresAt > Date.now() ) // fetch courses when component mounts if session is not expired
-			this.props.fetchCourses(this.props.session.sessionId, this.props.session.userId)
+			this.props.fetchCourses()
 	}
 
 	render()
@@ -32,10 +32,10 @@ class Sidebar extends React.Component
 					e.preventDefault()
 
 					let courseName = e.target.newCourse.value
-					this.props.addCourseSubmit( courseName )
+					this.props.fetchAddCourseSubmit( courseName )
 					e.target.newCourse.value = '' // reset course input after submit
 				}  }>
-					<input name='newCourse' type='text' />
+					<input name='newCourse' type='text' placeholder='New Course...' minlength='4' maxlength='24' />
 					<button type='submit'>Add</button>
 				</form>
 			</div>
@@ -49,9 +49,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	addCourseSubmit: courseName => dispatch( fetchAddCourse(courseName) ),
-	fetchCourses: (sessionId, userId) => dispatch ( fetchCourses(sessionId, userId) ),
-	addCourseSubmit: (name) => dispatch( addCourse(name) ) // temporary, used for demo
+	fetchAddCourseSubmit: courseName => dispatch( fetchAddCourse(courseName) ),
+	fetchCourses: () => dispatch ( fetchCourses() )
 })
 
 

@@ -1,6 +1,19 @@
 const apiUrl = 'http://localhost:8000/api/v1' // apiUrl changes depending on environment (development/production/test)
 
 // - synchronous action creators -
+
+// test action creators
+export const REQUEST_TESTS = 'REQUEST_TESTS'
+function requestTests()
+{
+	return { type: REQUEST_TESTS }
+}
+export const RECEIVE_TESTS = 'RECEIVE_TESTS'
+function receiveTests(data)
+{
+	return { type: RECEIVE_TESTS, tests: data, receivedAt: Date.now() }
+}
+
 // signup
 export const REQUEST_SIGNUP = 'REQUEST_SIGNUP'
 function requestSignup()
@@ -12,6 +25,7 @@ function receiveSignup(data)
 {
 	return { type: RECEIVE_SIGNUP, message: data.message, session: data.session }
 }
+
 // login
 export const REQUEST_LOGIN = 'LOGIN'
 function requestLogin()
@@ -23,6 +37,7 @@ function receiveLogin(data)
 {
 	return { type: RECEIVE_LOGIN, message: data.message, session: data.session }
 }
+
 // logout
 export const REQUEST_LOGOUT = 'REQUEST_LOGOUT'
 function requestLogout()
@@ -34,7 +49,6 @@ function receiveLogout()
 {
 	return { type: RECEIVE_LOGOUT }
 }
-
 export const RECEIVE_REFRESH_SESSION = 'RECEIVE_REFRESH_SESSION'
 /*
 function receiveRefreshSession()
@@ -42,6 +56,7 @@ function receiveRefreshSession()
 	return { type: RECEIVE_REFRESH_SESSION }
 }
 */
+
 // courses
 export const REQUEST_COURSES = 'REQUEST_COURSES'
 function requestCourses()
@@ -66,7 +81,7 @@ function requestAddCourse(courseName)
 export const RECEIVE_ADD_COURSE = 'RECEIVE_ADD_COURSE'
 function receiveAddCourse(courseName)
 {
-	return { type: RECEIVE_ADD_COURSE, courseName }
+	return { type: RECEIVE_ADD_COURSE }
 }
 // posts by courseId
 export const REQUEST_POSTS = 'REQUEST_POSTS'
@@ -80,22 +95,6 @@ function receivePosts(data, courseId)
 	return { type: RECEIVE_POSTS, courseId, items: data }
 }
 
-// test action creators
-export const REQUEST_TESTS = 'REQUEST_TESTS'
-function requestTests()
-{
-	return { type: REQUEST_TESTS }
-}
-export const RECEIVE_TESTS = 'RECEIVE_TESTS'
-function receiveTests(data)
-{
-	return { type: RECEIVE_TESTS, tests: data, receivedAt: Date.now() }
-}
-export const ADD_COURSE = 'ADD_COURSE' // temporary (for demo on March 21, 2018)
-export function addCourse(name)
-{
-	return { type: ADD_COURSE, course: {name, _id: 'temporaryIdHere'} }
-}
 export const ADD_COURSE_ITEM = 'ADD_POST' // temporary (for demo on March 21, 2018)
 export function addCourseItem(post, courseName)
 {
@@ -127,7 +126,7 @@ export function fetchLogin(email, password)
 	return dispatch =>
 	{
 		dispatch( requestLogin() )
-		fetch(`${apiUrl}/login`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password}) }).then( response => response.json() ).then( data => dispatch( receiveLogin(data) ) )
+		fetch(`${apiUrl}/login`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password}) }).then( response => response.json() ).then( data => { alert('data from login:' + JSON.stringify(data) ); dispatch( receiveLogin(data) ) } )
 		.catch( error => alert('Invalid email/password') /*alert(error)*/ )
 	}
 }
@@ -143,24 +142,30 @@ export function fetchLogout(sessionId, userId)
 }
 
 // *tba: courses
-export function fetchCourses(sessionId, userId)
+export function fetchCourses()
 {
-	return dispatch =>
+	return (dispatch, getState) =>
 	{
-		let sessionCookie = `sessionId=${sessionId}; userId=${userId};`
+		let session = getState().session
+		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
+		
 		dispatch( requestCourses() )
 		fetch(`${apiUrl}/courses`, {headers: {'Session': sessionCookie}}).then( response => response.json() ).then( data => { dispatch( receiveCourses(data) ); /*dispatch( receiveCourseItems(data)*/ } )
-			.catch( error => alert('Error from /courses ' + error) )	
+			.catch( error => alert('Error: Could not fetch courses. ' + error) )	
 	}
 }
 
 export function fetchAddCourse(courseName)
 {
-	return dispatch =>
+	return (dispatch, getState) =>
 	{
+		let session = getState().session
+		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
+		
 		dispatch( requestAddCourse(courseName) ) // provide course name for optimistic ui
-		fetch(`${apiUrl}/courses`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({courseName})}).then( response => response.json() ).then( data => dispatch( receiveAddCourse(courseName) ) )
-			.catch( error => alert(error) )		
+		fetch(`${apiUrl}/courses`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie }, body: JSON.stringify({name: courseName})}).then( response => response.json() )
+			.then( data => { dispatch( receiveAddCourse(courseName) ); dispatch( fetchCourses() ) } )
+			.catch( error => alert(`Error: Could not add course '${courseName}'. Are you logged in with a 'teacher' user? ${error}`) )		
 	}
 }
 
