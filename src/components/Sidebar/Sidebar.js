@@ -25,11 +25,11 @@ class Sidebar extends React.Component
 					</NavLink>
 
        		<li className="user dropdown-btn">
-							<span className="fa fa-3x fa-user-circle"></span><span className="user-span">First Last</span>
+							<span className="fa fa-3x fa-user-circle"></span><span className="user-span">Shandy Sulen</span>
 					</li>
 					<ul className="user dropdown-container" id="user-options">
 						{ this.props.session.sessionId &&
-						<li><a href="#" onClick={ () => this.props.dispatch( fetchLogout(this.props.session.sessionId, this.props.session.userId) ) }><span className="fa fa-sign-out"></span> Logout</a></li>
+						<li><a href="#" onClick={ () => this.props.fetchLogoutClick(this.props.session.sessionId, this.props.session.userId) }><span className="fa fa-sign-out"></span> Logout</a></li>
 						}
 						<li><a href="#0"><span className="fa fa-cog"></span> Settings</a></li>
 					</ul>
@@ -47,9 +47,7 @@ class Sidebar extends React.Component
 						<a href="#0"><span className="fa fa-book"></span> Courses</a>
 					</li>
 					<ul className="courses dropdown-container">
-             <li><a href="#0">CEN3031: Introduction to Software Engineering</a></li>
-             <li><a href="#0">CNT4007C: Computer Network Fundamentals</a></li>
-						 <li><a href="#0">CEN4914/CIS4914: CISE Design 2</a></li>
+						{ this.props.courses.map( (course, index) => ( <li key={index}> <NavLink to={`/courses/${course.name}`}>{course.name}</NavLink> </li> ) ) }
           </ul>
 
         </ul>
@@ -91,8 +89,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	fetchAddCourseSubmit: courseName => dispatch( fetchAddCourse(courseName) ),
-	fetchCourses: () => dispatch ( fetchCourses() )
+	fetchAddCourseSubmit: (courseName) => dispatch( fetchAddCourse(courseName) ),
+	fetchCourses: () => dispatch ( fetchCourses() ),
+	fetchLogoutClick: (sessionId, userId) => dispatch( fetchLogout(sessionId, userId) )
 })
 
 
