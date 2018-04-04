@@ -26,7 +26,7 @@ class App extends React.Component {
         </nav>
 
         <header>
-          <span className='sessionStatus'>{ this.props.session.sessionId ? `Logged in with session id '${this.props.session.sessionId}'` : 'Logged Out' }</span>
+          <span className='sessionStatus'>{ this.props.session.sessionId ? `Logged in with role '${this.props.session.role}'` : 'Logged Out' }</span>
           { this.props.session.sessionId &&  // only render logout button if logged in
             <button className='logoutButton' onClick={ () => this.props.session.sessionId ? this.props.dispatch( fetchLogout(this.props.session.sessionId, this.props.session.userId) ) : alert('You are already logged out') }>Logout</button>
           }
