@@ -3,14 +3,28 @@ import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { fetchCourses, fetchAddCourse, fetchLogout } from '../../actions.js'
 import './Sidebar.css'
+import $ from 'jquery'
 
 class Sidebar extends React.Component
 {
-	//({courses, courseName})
 	componentDidMount()
 	{
-		if ( this.props.session.expiresAt && this.props.session.expiresAt > Date.now() ) // fetch courses when component mounts if session is not expired
+		if ( this.props.session.expiresAt && this.props.session.expiresAt > Date.now() ) { // fetch courses when component mounts if session is not expired
 			this.props.fetchCourses()
+		}
+
+		$(".user.dropdown-btn").click(function(){
+			$(".user.dropdown-container").toggle(300);
+		});
+
+		$(".workshop.dropdown-btn").click(function(){
+			$(".workshop.dropdown-container").toggle(300);
+		});
+
+		$(".courses.dropdown-btn").click(function(){
+			$(".courses.dropdown-container").toggle(300);
+		});
+
 	}
 
 	render()
@@ -31,20 +45,20 @@ class Sidebar extends React.Component
 						{ this.props.session.sessionId &&
 						<li><a href="#" onClick={ () => this.props.fetchLogoutClick(this.props.session.sessionId, this.props.session.userId) }><span className="fa fa-sign-out"></span> Logout</a></li>
 						}
-						<li><a href="#0"><span className="fa fa-cog"></span> Settings</a></li>
+						<li><a href="#"><span className="fa fa-cog"></span> Settings</a></li>
 					</ul>
 
 					<hr></hr>
 
 					<li className="workshop dropdown-btn notifications">
-						<a href="#0"><span className="fa fa-pencil"></span> Workshop<span className="count">1</span></a>
+						<div><span className="fa fa-pencil"></span> Workshop<span className="count">1</span></div>
 					</li>
 					<ul className="workshop dropdown-container">
-             <li><a href="#0">Midterm Presentation 2</a></li>
+             <li><NavLink to="#">Midterm Presentation 2</NavLink></li>
           </ul>
 
 					<li className="courses dropdown-btn bookmarks">
-						<a href="#0"><span className="fa fa-book"></span> Courses</a>
+						<div><span className="fa fa-book"></span> Courses</div>
 					</li>
 					<ul className="courses dropdown-container">
 						{ this.props.courses.map( (course, index) => ( <li key={index}> <NavLink to={`/courses/${course.name}`}>{course.name}</NavLink> </li> ) ) }
