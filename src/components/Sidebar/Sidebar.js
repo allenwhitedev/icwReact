@@ -39,7 +39,7 @@ class Sidebar extends React.Component
 					</NavLink>
 
        		<li className="user dropdown-btn">
-							<span className="fa fa-3x fa-user-circle"></span><span className="user-span">Shandy Sulen</span>
+							<span className="fa fa-3x fa-user-circle"></span><span className="user-span">First Last</span>
 					</li>
 					<ul className="user dropdown-container" id="user-options">
 						{ this.props.session.sessionId &&
