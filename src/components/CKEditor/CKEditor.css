@@ -1,0 +1,25 @@
+.d-block {
+  display: block;
+}
+
+.CKEditor label {
+  font-weight: bold;
+  margin-bottom: 0px;
+  line-height: 40px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.mr-30 {
+  margin-right: 30px;
+}
