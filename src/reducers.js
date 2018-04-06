@@ -4,12 +4,10 @@ import {
 	REQUEST_SIGNUP, RECEIVE_SIGNUP, 
 	REQUEST_LOGIN, RECEIVE_LOGIN, 
 	REQUEST_LOGOUT, RECEIVE_LOGOUT,
-	RECEIVE_REFRESH_SESSION, // session is refreshed by any authenticated request that succeeds
+	RECEIVE_REFRESH_SESSION, // *tba: session is refreshed by any authenticated request that succeeds
 	REQUEST_COURSES, RECEIVE_COURSES, // courses action types
-	REQUEST_POSTS, RECEIVE_POSTS, // posts by courseId action types
 	REQUEST_TESTS, RECEIVE_TESTS, // tests action types
 	RECEIVE_COURSE_ITEMS, // course items are returned in same fetch that gets courses from backend
-	ADD_COURSE_ITEM, // temporary, used for demo
 	REQUEST_ADD_COURSE, RECEIVE_ADD_COURSE 
 } from './actions.js'
 
@@ -102,15 +100,6 @@ function courseItems(state = { isFetching: false, items: [] }, action)
 {
 	switch (action.type)
 	{
-		case ADD_COURSE_ITEM: // temporary, used for demo
-			if ( state[action.courseName] )
-				return { ...state, [action.courseName]: [ ...state[action.courseName], action.post ]  }
-			else
-				return { ...state, [action.courseName]: [action.post] }
-		case REQUEST_POSTS:
-			return { isFetching: true, ...state }
-		case RECEIVE_POSTS:
-			return { isFetching: false, [action.courseName]: action.items }
 		case RECEIVE_COURSE_ITEMS:
 			return { ...state, items: normalizeCourseItems(action.courses) }
 		default:

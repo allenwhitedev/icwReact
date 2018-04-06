@@ -1,118 +1,12 @@
 const apiUrl = 'http://localhost:8000/api/v1' // apiUrl changes depending on environment (development/production/test)
 
-// - synchronous action creators -
-
-// test action creators
+// tests 
 export const REQUEST_TESTS = 'REQUEST_TESTS'
-function requestTests()
-{
-	return { type: REQUEST_TESTS }
-}
 export const RECEIVE_TESTS = 'RECEIVE_TESTS'
-function receiveTests(data)
-{
-	return { type: RECEIVE_TESTS, tests: data, receivedAt: Date.now() }
-}
 
-// signup
-export const REQUEST_SIGNUP = 'REQUEST_SIGNUP'
-function requestSignup()
-{
-	return { type: REQUEST_SIGNUP }
-}
-export const RECEIVE_SIGNUP = 'RECEIVE_SIGNUP'
-function receiveSignup(data)
-{
-	return { type: RECEIVE_SIGNUP, message: data.message, session: data.session }
-}
-
-// login
-export const REQUEST_LOGIN = 'LOGIN'
-function requestLogin()
-{
-	return { type: REQUEST_LOGIN }
-}
-export const RECEIVE_LOGIN ='RECEIVE_LOGIN'
-function receiveLogin(data)
-{
-	return { type: RECEIVE_LOGIN, message: data.message, session: data.session }
-}
-
-// logout
-export const REQUEST_LOGOUT = 'REQUEST_LOGOUT'
-function requestLogout()
-{
-	return { type: REQUEST_LOGOUT }
-}
-export const RECEIVE_LOGOUT = 'RECEIVE_LOGOUT'
-function receiveLogout()
-{
-	return { type: RECEIVE_LOGOUT }
-}
-export const RECEIVE_REFRESH_SESSION = 'RECEIVE_REFRESH_SESSION'
-/*
-function receiveRefreshSession()
-{
-	return { type: RECEIVE_REFRESH_SESSION }
-}
-*/
-
-// courses
-export const REQUEST_COURSES = 'REQUEST_COURSES'
-function requestCourses()
-{
-	return { type: REQUEST_COURSES }
-}
-export const RECEIVE_COURSES = 'RECEIVE_COURSES'
-function receiveCourses(data)
-{
-	return { type: RECEIVE_COURSES, items: data }
-}
-export const RECEIVE_COURSE_ITEMS = 'RECEIVE_COURSE_ITEMS'
-function receiveCourseItems(data)
-{
-	return { type: RECEIVE_COURSE_ITEMS, courses: data }
-}
-export const REQUEST_ADD_COURSE = 'REQUEST_ADD_COURSE'
-function requestAddCourse(courseName)
-{
-	return { type: REQUEST_ADD_COURSE, courseName }
-}
-export const RECEIVE_ADD_COURSE = 'RECEIVE_ADD_COURSE'
-function receiveAddCourse(courseName)
-{
-	return { type: RECEIVE_ADD_COURSE }
-}
-export const REQUEST_ADD_COURSE_ITEM = 'REQUEST_ADD_COURSE_ITEM'
-function requestAddCourseItem(courseId)
-{
-	return { type: REQUEST_ADD_COURSE_ITEM, courseId }
-}
-export const RECEIVE_ADD_COURSE_ITEM = 'RECEIVE_COURSE_ITEM'
-function receiveAddCourseItem(data)
-{
-	return { type: RECEIVE_ADD_COURSE_ITEM, courseItem: data }
-}
-// posts by courseId
-export const REQUEST_POSTS = 'REQUEST_POSTS'
-function requestPosts()
-{
-	return { type: REQUEST_POSTS }
-}
-export const RECEIVE_POSTS = 'RECEIVE_POST'
-function receivePosts(data, courseId)
-{
-	return { type: RECEIVE_POSTS, courseId, items: data }
-}
-
-export const ADD_COURSE_ITEM = 'ADD_POST' // temporary (for demo on March 21, 2018)
-export function addCourseItem(post, courseName)
-{
-	return { type: ADD_COURSE_ITEM, post, courseName }
-}
-
-// - async action creators -
-export function fetchTests(requiresAuthentication)
+function requestTests() { return { type: REQUEST_TESTS } }
+function receiveTests(data) { return { type: RECEIVE_TESTS, tests: data, receivedAt: Date.now() } }
+export function fetchTests(requiresAuthentication) /* exported functions beginning with fetch are async */
 {
 	return dispatch =>
 	{
@@ -121,6 +15,12 @@ export function fetchTests(requiresAuthentication)
 	}
 }
 
+// signup
+export const REQUEST_SIGNUP = 'REQUEST_SIGNUP'
+export const RECEIVE_SIGNUP = 'RECEIVE_SIGNUP'
+
+function requestSignup() { return { type: REQUEST_SIGNUP } }
+function receiveSignup(data) { return { type: RECEIVE_SIGNUP, message: data.message, session: data.session } }
 export function fetchSignup(email, password)
 {
 	return dispatch =>
@@ -131,6 +31,12 @@ export function fetchSignup(email, password)
 	}
 }
 
+// login
+export const REQUEST_LOGIN = 'LOGIN'
+export const RECEIVE_LOGIN ='RECEIVE_LOGIN'
+
+function requestLogin() {	return { type: REQUEST_LOGIN } }
+function receiveLogin(data) { return { type: RECEIVE_LOGIN, message: data.message, session: data.session } }
 export function fetchLogin(email, password)
 {
 	return dispatch =>
@@ -141,6 +47,12 @@ export function fetchLogin(email, password)
 	}
 }
 
+// logout
+export const REQUEST_LOGOUT = 'REQUEST_LOGOUT'
+export const RECEIVE_LOGOUT = 'RECEIVE_LOGOUT'
+
+function requestLogout() { return { type: REQUEST_LOGOUT } }
+function receiveLogout() { return { type: RECEIVE_LOGOUT } }
 export function fetchLogout(sessionId, userId)
 {
 	return dispatch =>
@@ -151,7 +63,29 @@ export function fetchLogout(sessionId, userId)
 	}
 }
 
-// *tba: courses
+// *tba: refresh_session functionality 
+export const RECEIVE_REFRESH_SESSION = 'RECEIVE_REFRESH_SESSION'
+/*function receiveRefreshSession()
+{
+	return { type: RECEIVE_REFRESH_SESSION }
+}*/
+
+// courses
+export const REQUEST_COURSES = 'REQUEST_COURSES'
+export const RECEIVE_COURSES = 'RECEIVE_COURSES'
+export const RECEIVE_COURSE_ITEMS = 'RECEIVE_COURSE_ITEMS'
+export const REQUEST_ADD_COURSE = 'REQUEST_ADD_COURSE'
+export const RECEIVE_ADD_COURSE = 'RECEIVE_ADD_COURSE'
+export const REQUEST_ADD_COURSE_ITEM = 'REQUEST_ADD_COURSE_ITEM'
+export const RECEIVE_ADD_COURSE_ITEM = 'RECEIVE_COURSE_ITEM'
+
+function requestCourses() { return { type: REQUEST_COURSES } }
+function receiveCourses(data) { return { type: RECEIVE_COURSES, items: data } }
+function receiveCourseItems(data) {	return { type: RECEIVE_COURSE_ITEMS, courses: data } }
+function requestAddCourse(courseName) { return { type: REQUEST_ADD_COURSE, courseName } }
+function receiveAddCourse(courseName) { return { type: RECEIVE_ADD_COURSE } }
+function requestAddCourseItem(courseId) { return { type: REQUEST_ADD_COURSE_ITEM, courseId } }
+function receiveAddCourseItem(data) { return { type: RECEIVE_ADD_COURSE_ITEM, courseItem: data } }
 export function fetchCourses()
 {
 	return (dispatch, getState) =>
@@ -164,7 +98,6 @@ export function fetchCourses()
 			.catch( error => alert('Error: Could not fetch courses. ' + error) )	
 	}
 }
-
 export function fetchAddCourse(courseName)
 {
 	return (dispatch, getState) =>
@@ -178,7 +111,6 @@ export function fetchAddCourse(courseName)
 			.catch( error => alert(`Error: Could not add course '${courseName}'. Are you logged in with a 'teacher' user? ${error}`) )		
 	}
 }
-
 export function fetchAddCourseItem(courseItem, courseId)
 {
 	return (dispatch, getState) =>
@@ -192,17 +124,3 @@ export function fetchAddCourseItem(courseItem, courseId)
 			.catch( error => alert(`Error: Could not add item to course with id '${courseId}'. Are you logged in with a 'teacher' user? ${error}`) )			
 	}
 }
-
-// *tba: posts
-export function fetchPosts()
-{
-	return dispatch =>
-	{
-		dispatch( requestPosts() )
-		console.log('*tba: add fetch posts from api routes')
-		dispatch( receivePosts() )
-	}
-}
-
-// *tba: lessons
-
