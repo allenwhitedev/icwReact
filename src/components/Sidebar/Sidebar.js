@@ -44,7 +44,7 @@ class Sidebar extends React.Component
 }
 
 const mapStateToProps = state => ({
-	courses: state.courses.items,
+	courses: state.entities.courses.allIds.map( id => state.entities.courses.byId[id] ),
 	session: state.session
 })
 

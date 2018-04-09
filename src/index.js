@@ -5,7 +5,7 @@ import registerServiceWorker from './registerServiceWorker';
 import App from './components/App/App.js';
 import Login from './components/Login/Login.js'
 import CourseItem from './components/CourseItem/CourseItem'
-import rootReducer from './reducers.js'
+import rootReducer from './reducers'
 
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux' // provide access to state across all components/containers

@@ -10,7 +10,7 @@ let Test = ({tests, fetchTestsClick}) =>
 		<ul style={ {'listStyle': 'none'} }>
 			{ tests.map( (test, index) => 
 				(
-					<li key={index}> {test.message} </li>
+					<li key={index}> { test.message } </li>
 				)) }
 		</ul>
 
@@ -19,7 +19,7 @@ let Test = ({tests, fetchTestsClick}) =>
 ) 
 
 const mapStateToProps = state => ({
-	tests: state.tests.items
+	tests: state.entities.tests.allIds.map( id => state.entities.tests.byId[id] )
 })
 
 const mapDispatchToProps = dispatch => ({

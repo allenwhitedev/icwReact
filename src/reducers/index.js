@@ -5,31 +5,10 @@ import {
 	REQUEST_LOGIN, RECEIVE_LOGIN, 
 	REQUEST_LOGOUT, RECEIVE_LOGOUT,
 	RECEIVE_REFRESH_SESSION, // *tba: session is refreshed by any authenticated request that succeeds
-	REQUEST_COURSES, RECEIVE_COURSES, // courses action types
-	REQUEST_TESTS, RECEIVE_TESTS, // tests action types
-	RECEIVE_COURSE_ITEMS, // course items are returned in same fetch that gets courses from backend
-	REQUEST_ADD_COURSE, RECEIVE_ADD_COURSE 
-} from './actions.js'
-
-const rootReducer = combineReducers({
-	tests,
-	session,
-	courses,
-	courseItems
-})
-
-function tests(state = { isFetching: false, items: [{message: 'Default offline test message'}] }, action)
-{
-	switch (action.type)
-	{
-		case REQUEST_TESTS:
-			return { ...state, isFetching: true }
-		case RECEIVE_TESTS:
-			return { ...state, items: action.tests, isFetching: false }
-		default:
-			return state 
-	}
-}
+} from '../actions.js'
+// import reducers
+import tests from './tests'
+import {courses, courseItems} from './courses'
 
 function session(state, action)
 {
@@ -70,42 +49,9 @@ function session(state, action)
 	}
 }
 
-function courses(state = { isFetching: false, items: [{_id: '0ab', name: 'Offline Course 1'}, {_id: '1ab', name: 'Offline Course 2'}, {_id: '1ab', name: 'EGS4034 - Engineering Ethics'}] }, action)
-{
-	switch (action.type)
-	{
-		case REQUEST_COURSES:
-			return { isFetching: true, ...state }
-		case RECEIVE_COURSES:	
-			return { isFetching: false, items: action.items }
-		case REQUEST_ADD_COURSE: // temporary, used for demo
-			return { isFetching: true, items: [...state.items, {_id: `'optimisticUITempId${state.items.length}`, name: action.courseName }] }
-		case RECEIVE_ADD_COURSE:
-			return { isFetching: false, ...state }
-		default:
-			return state
-	}
-}
-
-
-function normalizeCourseItems(courses) // database store prefers denormalized data, redux prefers normalized data structure (haven't verified it sufficently normalizes data)
-{
-	let courseItems = []
-	for ( let i in courses )
-		for ( let j in courses[i].items )
-			courseItems.push({courseId: courses[i]._id, ...courses[i].items[j]})
-	return courseItems
-}
-function courseItems(state = { isFetching: false, items: [] }, action)
-{
-	switch (action.type)
-	{
-		case RECEIVE_COURSE_ITEMS:
-			return { ...state, items: normalizeCourseItems(action.courses) }
-		default:
-			return state
-	}
-}
-
-
+const entities = combineReducers({tests, courses, courseItems})
+const rootReducer = combineReducers({
+	entities,
+	session
+}) 
 export default rootReducer

@@ -11,7 +11,7 @@ const CourseItem = ({courseItem}) =>
 )
 
 const mapStateToProps = (state, ownProps) => ({
-	courseItem: state.courseItems.items.find( courseItem => ownProps.match.params.courseItemId === courseItem.id ) ? state.courseItems.items.find( courseItem => ownProps.match.params.courseItemId === courseItem.id ) : {id: 'not defined yet', title: 'not defined yet'}
+	courseItem: state.entities.courseItems.byId[ownProps.match.params.courseItemId]
 })
 
 export default connect(mapStateToProps)(CourseItem)

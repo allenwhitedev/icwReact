@@ -26,11 +26,9 @@ let Course = ({courseId, courseItems, fetchAddCourseItemClick, course, sessionRo
 
 const mapStateToProps = (state, ownProps) => ({
 	courseId: ownProps.courseId,
-	// this .find() mess is probably why data needs to be structed byIds. ( and normalized? https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape )
-	course: state.courses.items.find( course => course._id === ownProps.courseId ) ? state.courses.items.find( course => course._id === ownProps.courseId ) : {name: 'Course not loaded yet'}, 
-	courseItems: state.courseItems.items.filter( courseItem => courseItem.courseId === ownProps.courseId ) ? state.courseItems.items.filter( courseItem => courseItem.courseId === ownProps.courseId ) : [],
-	sessionRole: state.session.role ? state.session.role : false 
-	//courseItems: state.courseItems[ownProps.courseName] ? state.courseItems[ownProps.courseName] : [] //state.posts.courseName['post one', 'post two']
+	course: state.entities.courses.byId[ownProps.courseId],
+	courseItems: state.entities.courseItems.allIds.map( id => state.entities.courseItems.byId[id] ).filter( courseItem => courseItem.courseId === ownProps.courseId ), // grab course items for current course
+	sessionRole: state.session.role || false 
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
