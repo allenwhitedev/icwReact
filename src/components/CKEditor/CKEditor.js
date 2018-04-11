@@ -10,6 +10,9 @@ export default class CKEditor extends React.Component {
 			window.CKEDITOR.config.mathJaxLib = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML'
 			window.CKEDITOR.config.allowedContent = true // allows insertHtml() to add html attributes (including onclick=) for custom popup
 			window.CKEDITOR.config.removeFormatAttributes = ''
+
+			if ( this.props.editingContent ) // if editing lesson pre-fill ckeditor with html from lesson's content
+				window.CKEDITOR.instances.editor1.setData( this.props.editingContent )
 		}
 	} // instantiate advanced html editor, load page if editing a page that already exists 
 
@@ -24,13 +27,21 @@ export default class CKEditor extends React.Component {
 						let title = e.target.title.value
 						let content = window.CKEDITOR.instances.editor1.getData()
 						
-						this.props.fetchAddCourseItemClick({type: 'lesson', title, content}) // (inherited prop from Course)
+						if ( !this.props.editingContent) // create new course item if not editing an already existing course item
+							this.props.fetchAddCourseItemClick({type: 'lesson', title, content}) // (inherited prop from Course)
+						else
+							this.props.fetchEditCourseItemClick(this.props.type, content) // edit existing course item
 						
 						window.CKEDITOR.instances.editor1.setData('') // reset advanced html editor					
-						e.target.title.value = '' // reset lesson title
+						
+						if ( e.target.title )
+							e.target.title.value = '' // reset lesson title
 					} }>
 					<br />
-					<input name='title' minLength='1' placeholder='Lesson Title...' />
+					
+					{ !this.props.editingContent && // do not render lesson title input if editing already existing course item
+						<input name='title' minLength='1' placeholder='Lesson Title...' />
+					}
 					<button type='submit'>Submit Lesson</button>
 					</form>
 

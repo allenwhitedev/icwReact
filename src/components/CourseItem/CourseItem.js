@@ -1,17 +1,40 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { fetchEditCourseItem } from '../../actions'
+import CKEditor from '../CKEditor/CKEditor.js'
 
-const CourseItem = ({courseItem}) =>
-(
-	<div className='CourseItem' style={ {paddingLeft: '315px', position: 'absolute', left: '0px', top: '100px'} }>
-		<h2>{ courseItem.title }</h2>
-		<hr />
-		<section style={ {padding: '15px'} } className='courseItemContent' dangerouslySetInnerHTML={ {__html: courseItem.content} }></section>
-	</div>
-)
+class CourseItem extends React.Component {
+	constructor(props)
+	{
+		super(props)
+		this.state = { isEditing: false } 
+	}
+
+	render()
+	{
+		return(
+			<div className='CourseItem' style={ {paddingLeft: '315px', position: 'absolute', left: '0px', top: '100px'} }>
+				<button onClick={ () => this.setState( (prevState) => ({isEditing: !prevState.isEditing}) ) }> { this.state.isEditing ? 'Stop Editing' : 'Edit'}</button>
+
+				{ this.state.isEditing &&
+					<CKEditor fetchEditCourseItemClick={ this.props.fetchEditCourseItemClick } editingContent={this.props.courseItem.content} type={ this.props.courseItem.type } />
+				}
+
+				<h2>{ this.props.courseItem.title }</h2>
+				<hr />
+				<section style={ {padding: '15px'} } className='courseItemContent' dangerouslySetInnerHTML={ {__html: this.props.courseItem.content} }></section>
+			</div>
+		)
+	}
+} 
 
 const mapStateToProps = (state, ownProps) => ({
-	courseItem: state.entities.courseItems.byId[ownProps.match.params.courseItemId]
+	courseItem: state.entities.courseItems.byId[ownProps.match.params.courseItemId],
+	location: ownProps.location
 })
 
-export default connect(mapStateToProps)(CourseItem)
+const mapDispatchToProps = (dispatch, ownProps) => ({
+	fetchEditCourseItemClick: (type, content) => dispatch( fetchEditCourseItem(ownProps.match.params.courseId, ownProps.match.params.courseItemId, type, content) )
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CourseItem)

@@ -78,6 +78,8 @@ export const REQUEST_ADD_COURSE = 'REQUEST_ADD_COURSE'
 export const RECEIVE_ADD_COURSE = 'RECEIVE_ADD_COURSE'
 export const REQUEST_ADD_COURSE_ITEM = 'REQUEST_ADD_COURSE_ITEM'
 export const RECEIVE_ADD_COURSE_ITEM = 'RECEIVE_COURSE_ITEM'
+export const REQUEST_EDIT_COURSE_ITEM = 'REQUEST_EDIT_COURSE_ITEM'
+export const RECEIVE_EDIT_COURSE_ITEM = 'RECEIVE_EDIT_COURSE_ITEM'
 
 function requestCourses() { return { type: REQUEST_COURSES } }
 function receiveCourses(data) { return { type: RECEIVE_COURSES, items: data } }
@@ -86,6 +88,8 @@ function requestAddCourse(courseName) { return { type: REQUEST_ADD_COURSE, cours
 function receiveAddCourse(courseName) { return { type: RECEIVE_ADD_COURSE } }
 function requestAddCourseItem(courseId) { return { type: REQUEST_ADD_COURSE_ITEM, courseId } }
 function receiveAddCourseItem(data) { return { type: RECEIVE_ADD_COURSE_ITEM, courseItem: data } }
+function requestEditCourseItem() { return { type: REQUEST_EDIT_COURSE_ITEM } }
+function receiveEditCourseItem() { return { type: RECEIVE_EDIT_COURSE_ITEM } }
 export function fetchCourses()
 {
 	return (dispatch, getState) =>
@@ -120,7 +124,19 @@ export function fetchAddCourseItem(courseItem, courseId)
 		
 		dispatch( requestAddCourseItem(courseId) )
 		fetch(`${apiUrl}/courses/${courseId}`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify(courseItem) })
-			.then( response => response.json() ).then( data => { dispatch( receiveAddCourseItem(data) ); dispatch( fetchCourses() ) } ) // fetch courses as db may perform some operations on courseItem content to make it safe 
+			.then( response => response.json() ).then( data => { dispatch( receiveAddCourseItem(data) ); dispatch( fetchCourses() ) } ) // fetch courses from backend as db may perform some operations on courseItem content to make it safe 
 			.catch( error => alert(`Error: Could not add item to course with id '${courseId}'. Are you logged in with a 'teacher' user? ${error}`) )			
+	}
+}
+export function fetchEditCourseItem(courseId, courseItemId, type, content)
+{
+	return (dispatch, getState) =>
+	{
+		let session = getState().session
+		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
+
+		dispatch(requestEditCourseItem(courseId, courseItemId))
+		fetch(`${apiUrl}/courses/${courseId}`, {method: 'PATCH', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({courseItemId, type, content}) })
+			.then( response => response.json() ).then( data => { dispatch( receiveEditCourseItem() ); dispatch(fetchCourses()) } ) // fetch courses from backend after successful edit
 	}
 }
