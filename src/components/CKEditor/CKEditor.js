@@ -27,10 +27,12 @@ export default class CKEditor extends React.Component {
 						let title = e.target.title.value
 						let content = window.CKEDITOR.instances.editor1.getData()
 						
-						if ( !this.props.editingContent) // create new course item if not editing an already existing course item
+						if ( !this.props.editingContent && !this.props.isAddingSubCourseItem ) // create new course item if not editing an already existing course item
 							this.props.fetchAddCourseItemClick({type: 'lesson', title, content}) // (inherited prop from Course)
-						else
+						else if ( !this.props.isAddingSubCourseItem )
 							this.props.fetchEditCourseItemClick(this.props.type, content) // edit existing course item
+						else
+							this.props.fetchAddSubCourseItemClick(this.props.type, title, content)// add sub course item to existing course item
 						
 						window.CKEDITOR.instances.editor1.setData('') // reset advanced html editor					
 						
