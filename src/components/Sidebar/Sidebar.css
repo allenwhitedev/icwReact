@@ -4,7 +4,7 @@ ul {
 
 .sidenav {
     height: 100%;
-    width: 300px;
+    width: 200px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -13,6 +13,7 @@ ul {
     overflow-x: hidden;
     padding-top: 20px;
     background-color: #2c3136;
+    font-size: 14px;
 }
 
 .user-span {
@@ -27,9 +28,8 @@ ul {
 }
 
 .sidenav a, .sidenav div {
-    padding: 6px 8px 6px 16px;
+    padding: 6px 16px;
     text-decoration: none;
-    font-size: 18px;
     color: #818181;
     display: block;
     text-align:left;
@@ -43,9 +43,21 @@ ul {
   cursor: pointer;
 }
 
+.sidenav .dropdown-container {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.sidenav a {
+  position: relative;
+  left: 0px;
+  transition: left ease 0.5s;
+}
+
 .sidenav a:hover {
-    color: #088447;
-    text-decoration-line: none;
+  color: #088447;
+  text-decoration-line: none;
+  left: 10px;
 }
 
 .sidenav > ul > li:hover {
@@ -117,6 +129,17 @@ ul {
   font-weight: bold;
   font-size: 14px;
   text-align: center;
+}
+
+#add-course-btn {
+  margin: 0 auto;
+  margin-top: 10px;
+  display: block;
+}
+
+#add-course {
+  font-size: 14px;
+  color: black;
 }
 
 .dropdown-container {

@@ -25,6 +25,14 @@ class Sidebar extends React.Component
 			$(".courses.dropdown-container").toggle(300);
 		});
 
+		if ($('#user-options').is(':visible')){
+			$('#caret').html('<span className="fa fa-caret-up"></span>')
+		}
+
+		if (!$('#user-options').is(':visible')){
+			$('#caret').html('<span className="fa fa-caret-down"></span>')
+		}
+
 	}
 
 	render()
@@ -40,7 +48,7 @@ class Sidebar extends React.Component
 					</NavLink>
 
        		<li className="user dropdown-btn">
-							<span className="fa fa-3x fa-user-circle"></span><span className="user-span">First Last</span>
+							<span className="fa fa-3x fa-user-circle"></span><span className="user-span">First Last</span><div id="caret"><span className="fa fa-caret-down"></span></div>
 					</li>
 					<ul className="user dropdown-container" id="user-options">
 						{ this.props.session.sessionId &&
@@ -65,36 +73,25 @@ class Sidebar extends React.Component
 						{ this.props.courses.map( (course, index) => ( <li key={index}> <NavLink to={`/courses/${course.name}`}>{course.name}</NavLink> </li> ) ) }
           </ul>
 
+					<hr></hr>
+
+					<form onSubmit={ e =>
+					{
+						e.preventDefault()
+
+						let courseName = e.target.newCourse.value
+						this.props.fetchAddCourseSubmit( courseName )
+						e.target.newCourse.value = '' // reset course input after submit
+					}  }>
+						<div className='form-group'>
+							<input id='add-course' className='form-control' name='newCourse' type='text' placeholder='New Course...' minlength='4' maxlength='24' />
+							<button id='add-course-btn' className='btn btn-sm btn-primary' type='submit'><span className='fa fa-plus-circle'></span> Add Course</button>
+						</div>
+					</form>
         </ul>
  			</nav>
 		</div>
-
-
-			// <div className='Sidebar'>
-			// 	<img alt="IT/CS Workshop" src="/images/icw-logo-128x90.png" />
-			// 	<ul style={ {listStyle: 'none', textAlign: 'center'} }>
-			// 	{
-			// 		this.props.courses.map( (course, index) =>
-			// 		(
-			// 			<li key={index}> <NavLink to={`/courses/${course.name}`}>{course.name}</NavLink> </li>
-			// 		) )
-			// 	}
-			// 	</ul>
-			//
-			//
-			// 	<form onSubmit={ e =>
-			// 	{
-			// 		e.preventDefault()
-			//
-			// 		let courseName = e.target.newCourse.value
-			// 		this.props.fetchAddCourseSubmit( courseName )
-			// 		e.target.newCourse.value = '' // reset course input after submit
-			// 	}  }>
-			// 		<input name='newCourse' type='text' placeholder='New Course...' minlength='4' maxlength='24' />
-			// 		<button type='submit'>Add</button>
-			// 	</form>
-			// </div>
-		)
+	)
 	}
 }
 
@@ -108,6 +105,5 @@ const mapDispatchToProps = dispatch => ({
 	fetchCourses: () => dispatch ( fetchCourses() ),
 	fetchLogoutClick: (sessionId, userId) => dispatch( fetchLogout(sessionId, userId) )
 })
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
