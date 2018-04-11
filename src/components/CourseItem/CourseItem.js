@@ -14,8 +14,10 @@ class CourseItem extends React.Component {
 	{
 		return(
 			<div className='CourseItem' style={ {paddingLeft: '315px', position: 'absolute', left: '0px', top: '100px'} }>
-				<button onClick={ () => this.setState( (prevState) => ({isEditing: !prevState.isEditing}) ) }> { this.state.isEditing ? 'Stop Editing' : 'Edit'}</button>
-
+				{ this.props.sessionRole === 'teacher' && // only show edit button to users with role 'teacher'
+					<button onClick={ () => this.setState( (prevState) => ({isEditing: !prevState.isEditing}) ) }> { this.state.isEditing ? 'Stop Editing' : 'Edit'}</button>
+				}
+				
 				{ this.state.isEditing &&
 					<CKEditor fetchEditCourseItemClick={ this.props.fetchEditCourseItemClick } editingContent={this.props.courseItem.content} type={ this.props.courseItem.type } />
 				}
@@ -29,6 +31,7 @@ class CourseItem extends React.Component {
 } 
 
 const mapStateToProps = (state, ownProps) => ({
+	sessionRole: state.session.role,
 	courseItem: state.entities.courseItems.byId[ownProps.match.params.courseItemId],
 	location: ownProps.location
 })
