@@ -17,16 +17,13 @@ class Sidebar extends React.Component
 	{
 		return (
 			<div className='Sidebar'>
-				<ul style={ {listStyle: 'none', textAlign: 'center'} }>
-				{
-					this.props.courses.map( (course, index) => 
-					(
-						<li key={index}> <NavLink to={`/courses/${course._id}`}>{course.name}</NavLink> </li>
-					) )
-				}
-				</ul>
-				
 
+				<NavLink to='/'>
+					<img src='/images/icw-logo-128x90.png' alt='ICW logo'/>
+				</NavLink>
+				
+				{this.props.children}
+				
 				<form onSubmit={ e =>
 				{
 					e.preventDefault()
@@ -44,7 +41,6 @@ class Sidebar extends React.Component
 }
 
 const mapStateToProps = state => ({
-	courses: state.entities.courses.allIds.map( id => state.entities.courses.byId[id] ),
 	session: state.session
 })
 

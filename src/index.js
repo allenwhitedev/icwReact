@@ -27,7 +27,8 @@ ReactDOM.render(
 				}
 				<Route component={Login} path='/login' />
 				<Route component={ store.getState().session.expiresAt && store.getState().session.expiresAt > Date.now() ? App : null} exact path='/:currentComponent?' />
-				<Route component={App} path='/courses/:courseId' />
+				<Route component={App} exact path='/courses/:courseId' />
+				<Route component={App} path='/courses/:courseId/:courseItemId' />
 				<Route component={CourseItem} path='/courses/:courseId/:courseItemId' />
 			</div>
 		</BrowserRouter>

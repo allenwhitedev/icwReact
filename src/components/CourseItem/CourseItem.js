@@ -19,7 +19,7 @@ class CourseItem extends React.Component {
 						{ !this.state.isAddingSubCourseItem &&
 							<button onClick={ () => this.setState( (prevState) => ({isEditing: !prevState.isEditing}) ) }> { this.state.isEditing ? 'Stop Editing' : 'Edit'}</button>	
 						}
-						{ !this.state.isEditing &&
+						{ !this.state.isEditing && !this.props.courseItem.parentCourseItemId && // (do not allow users to add sub course items to sub course items)
 							<button onClick={ () => this.setState( (prevState) => ({isAddingSubCourseItem: !prevState.isAddingSubCourseItem}) ) }> { this.state.isAddingSubCourseItem ? 'Stop Adding Sub Course Item' : 'Add Sub Course Item'}</button>
 						}						
 
@@ -27,7 +27,7 @@ class CourseItem extends React.Component {
 							<CKEditor fetchEditCourseItemClick={ this.props.fetchEditCourseItemClick } editingContent={this.props.courseItem.content} type={ this.props.courseItem.type } />
 						}
 
-						{ this.state.isAddingSubCourseItem && !this.state.isEditing && // add sub course item CKEditor
+						{ this.state.isAddingSubCourseItem && !this.state.isEditing && !this.props.courseItem.parentCourseItemId && // add sub course item CKEditor (do not allow users to add sub course items to sub course items)
 							<CKEditor isAddingSubCourseItem={true} fetchAddSubCourseItemClick={ this.props.fetchAddSubCourseItemClick } type={ this.props.courseItem.type } />
 						}	
 					</section>
