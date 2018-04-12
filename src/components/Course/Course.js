@@ -4,7 +4,13 @@ import { fetchAddCourseItem } from '../../actions.js'
 import { NavLink } from 'react-router-dom'
 import CKEditor from '../CKEditor/CKEditor.js'
 
-let Course = ({courseId, courseItems, fetchAddCourseItemClick, course, sessionRole}) =>
+let Course = ({
+	courseId, 
+	courseItems, 
+	fetchAddCourseItemClick, 
+	course = {name: 'Course Name'}, // needed to render on refresh 
+	sessionRole
+}) =>
 (
 	<div className='Course' style={ {padding: '15px'} }>
 		<h2> {course.name} </h2>

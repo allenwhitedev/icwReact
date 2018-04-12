@@ -41,6 +41,10 @@ class CourseItem extends React.Component {
 	}
 } 
 
+CourseItem.defaultProps = {
+	courseItem: {parentCourseItemId: false} // needed to render on refresh
+}
+
 const mapStateToProps = (state, ownProps) => ({
 	sessionRole: state.session.role,
 	courseItem: state.entities.courseItems.byId[ownProps.match.params.courseItemId],
