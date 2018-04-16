@@ -36,13 +36,19 @@ export const REQUEST_LOGIN = 'LOGIN'
 export const RECEIVE_LOGIN ='RECEIVE_LOGIN'
 
 function requestLogin() {	return { type: REQUEST_LOGIN } }
-function receiveLogin(data) { return { type: RECEIVE_LOGIN, message: data.message, session: data.session } }
+function receiveLogin(data) { return { type: RECEIVE_LOGIN, message: data.message, session: data.session, completedCourseItems: data.completedCourseItems } }
 export function fetchLogin(email, password)
 {
 	return dispatch =>
 	{
 		dispatch( requestLogin() )
-		fetch(`${apiUrl}/login`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password}) }).then( response => response.json() ).then( data => dispatch( receiveLogin(data) ) )
+		fetch(`${apiUrl}/login`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password}) }).then( response => response.json() )
+			.then( data => 
+				{ 
+					dispatch( receiveLogin(data) ) 
+					if (data.session.role === 'teacher')
+						dispatch( fetchUsers() ) // fetch users on login if user is 'teacher' 
+				} )
 		.catch( error => alert('Invalid email/password') /*alert(error)*/ )
 	}
 }
@@ -156,5 +162,42 @@ export function fetchAddSubCourseItem(courseId, parentCourseItemId, type, title,
 		fetch(`${apiUrl}/courses/${courseId}/${parentCourseItemId}`, { method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({type, title, content}) } )
 			.then( response => response.json() ).then( data => { dispatch(receiveAddSubCourseItem); dispatch( fetchCourses() ) } ) // fetch courses from backend after successfully adding sub course item
 			.catch( error => alert(`Error: Could add sub course item to course item with id '${parentCourseItemId}'. Are you logged in with a 'teacher' user?`) )
+	}
+}
+
+// users
+export const REQUEST_USERS = 'REQUEST_USERS'
+export const RECEIVE_USERS = 'RECEIVE_USERS'
+export const REQUEST_COMPLETE_COURSE_ITEM = 'REQUEST_COMPLETE_COURSE_ITEM'
+export const RECEIVE_COMPLETE_COURSE_ITEM = 'RECEIVE_COMPLETE_COURSE_ITEM'
+
+function requestUsers() { return { type: REQUEST_USERS } }
+function receiveUsers(data) { return { type: RECEIVE_USERS, users: data} }
+function requestCompleteCourseItem(courseItemId) { return { type: REQUEST_COMPLETE_COURSE_ITEM, courseItemId} }
+function receiveCompleteCourseItem(data, courseItemId, userId) { return { type: RECEIVE_COMPLETE_COURSE_ITEM, userId, completedCourseItem: { courseItemId, completedAt: data.completedAt } } }
+
+export function fetchUsers()
+{
+	return (dispatch, getState) =>
+	{
+		let session = getState().session
+		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
+
+		dispatch( requestUsers() )
+		fetch(`${apiUrl}/users`, {headers: {'Session': sessionCookie} }).then( response => response.json() ).then( data => dispatch( receiveUsers(data) ) )
+			.catch( error => alert(`Error: Could not fetch users. ${error}`) )
+	}
+}
+export function fetchCompleteCourseItem(courseItemId)
+{
+	return (dispatch, getState) =>
+	{
+		let session = getState().session
+		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
+
+		dispatch( requestCompleteCourseItem(courseItemId) )
+		fetch(`${apiUrl}/users/completedCourseItems`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({courseItemId}) })
+			.then( response => response.json() ).then( data => dispatch( receiveCompleteCourseItem(data, courseItemId, session.userId) ) )
+			.catch( error => alert(`Error: Could not complete course item with id '${courseItemId}. ${error}'`) )
 	}
 }

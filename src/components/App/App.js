@@ -8,13 +8,26 @@ import Test from '../Test/Test.js'
 import Login from '../Login/Login.js'
 import Sidebar from '../Sidebar/Sidebar.js'
 import Course from '../Course/Course.js'
+import { fetchCompleteCourseItem, fetchUsers } from '../../actions'
+import { isCourseItemCompleted } from '../../reducers/users'
+import { getCourseItemTitleById } from '../../reducers/courses'
 
 class App extends React.Component {
 
   componentWillMount()
   {
-    if ( this.props.history.location.pathname === '/login' )
+    if ( this.props.history.location.pathname === '/login' ) // redirect to home page after logging in
+    {
       this.props.history.push('/')
+      if ( this.props.session.role === 'teacher'  ) // fetch users for home page if user is 'teacher'
+        this.props.dispatch( fetchUsers() )
+    }
+  }
+
+  componentDidMount() // fetches user on home page refresh ( for 'teacher' )
+  {
+    if ( this.props.session.role === 'teacher' && this.props.match.url === '/' ) // fetch users on home page is user is 'teacher'
+      this.props.dispatch( fetchUsers() )
   }
 
   render() {
@@ -34,7 +47,10 @@ class App extends React.Component {
               { this.props.match.params.courseId && this.props.match.params.courseId !== '' && // Sidebar for course/courseItem pages
                   this.props.courseItems.map( (courseItem, index) => 
                   (
-                    <li key={courseItem.id}> 
+
+                    <li key={courseItem.id} onClick={ 
+                      () => this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) ? this.props.dispatch( fetchCompleteCourseItem(courseItem.id) ) : null /* complete course it if student */ 
+                    }> 
                       <NavLink style={ courseItem.id === this.props.match.params.courseItemId ? {color: 'red'} : {} } to={`/courses/${this.props.match.params.courseId}/${courseItem.id}`} >
                         <span style={ courseItem.parentCourseItemId ? {marginLeft: '15px'} : {} }> {courseItem.title} </span> 
                       </NavLink> 
@@ -56,14 +72,27 @@ class App extends React.Component {
           }
         </header>
 
-        { this.props.match.url === '/' &&
-          <section className='homeBanner'>
-            <h1>Welcome</h1>
-            <h2>This is the home page.</h2>
-          </section>
-        }
-
         <main className='main'>
+
+          { this.props.match.url === '/' &&
+            <section className='homeBanner'>
+              <h1>Welcome</h1>
+              <h2>This is the home page.</h2>
+
+              { this.props.session.role === 'teacher' && // display all users on home page if user is 'teacher'
+                <ul className='usersList'>
+                  { this.props.users.allIds.map( userId => ( 
+                    <li key={userId}> 
+                      <b>{userId}: </b>
+                      { this.props.users.byId[userId].completedCourseItems.map( completedCourseItem => `['${ getCourseItemTitleById(this.props.courseItems, completedCourseItem.courseItemId) }', completed: ${new Date(completedCourseItem.completedAt)}]` ) } 
+                    </li> 
+                    ) ) }
+                </ul>            
+              }
+    
+            </section>
+          }
+
           { ( this.props.match.path.includes('/courses') && this.props.location.pathname.match( new RegExp('/', 'g') ).length < 3 )  &&
             <Course courseId={ this.props.match.params.courseId } />
           }
@@ -122,6 +151,8 @@ const mapStateToProps = (state, ownProps) => {
     else
       orderedCourseItems.push( courseItems[i] )    
   }
+  if ( ownProps.match.url === '/' ) // get all courseItemIds if on home page (used to display completed course items)
+    orderedCourseItems = state.entities.courseItems.allIds.map( id => state.entities.courseItems.byId[id] )
 
   let parentIndex = -1 // -1 is the not found value of indexOf()
   for ( let i in subCourseItems )
@@ -134,7 +165,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     session: state.session,
     courses: state.entities.courses.allIds.map( id => state.entities.courses.byId[id] ),
-    courseItems: orderedCourseItems
+    courseItems: orderedCourseItems,
+    users: state.entities.users
   }
 }
 

@@ -85,6 +85,13 @@ function courseItemsAllIds(state = [], action)
 	}
 }
 
+// selectors
+export function getCourseItemTitleById(courseItems, courseItemId)
+{
+  let courseItem = courseItems.find( courseItem => courseItem.id === courseItemId )
+  return courseItem ? courseItem.title : ''
+}
+
 export const courseItems = combineReducers({ // course items reducer
 	isFetching,
 	byId: courseItemsById,
