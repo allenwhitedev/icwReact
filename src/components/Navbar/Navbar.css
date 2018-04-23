@@ -1,0 +1,10 @@
+.Navbar 
+{ 
+	height: 54px; width: 100%; padding-left: 300px; 
+	position: absolute; top: 0; left: 0; display: flex;
+	background-color: #fff; border-bottom: 1px solid #ebebeb; 
+	box-shadow: inset 1px 0 0 0 #e8e8e8; 
+}
+.architectureLevels { list-style: none; display: flex; margin-right: auto; align-items: center; padding-left: 0px; font-size: 1.75rem; height: 100%; }
+.architectureLevels > li { height: 100%; padding-left: 15px; padding-right: 15px; display: flex; align-items: center; cursor: pointer; }
+.activeArchitectureLevel { color: blue; }

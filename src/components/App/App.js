@@ -8,6 +8,7 @@ import Test from '../Test/Test.js'
 import Login from '../Login/Login.js'
 import Sidebar from '../Sidebar/Sidebar.js'
 import Course from '../Course/Course.js'
+import Navbar from '../Navbar/Navbar.js'
 import { fetchCompleteCourseItem, fetchUsers } from '../../actions'
 import { isCourseItemCompleted } from '../../reducers/users'
 import { getCourseItemTitleById } from '../../reducers/courses'
@@ -34,37 +35,37 @@ class App extends React.Component {
     return (
       <div className="App">
 
-          <Sidebar courseName={this.props.params}> {/* Sidebar for home page  */}
-            <ul style={ {listStyle: 'none', textAlign: 'left', paddingLeft: '25px'} }>
-              <h4> { this.props.courses.find( course => course._id === this.props.match.params.courseId ) ? this.props.courses.find( course => course._id === this.props.match.params.courseId ).name : '' /* this selected should be refactored and moved to matchStateToProps() */ }</h4>
+        {/* Navbar */}
+        <Navbar />
 
-              { (!this.props.match.params.courseId || this.props.match.params.courseId === '') && // Sidebar for home page
-                this.props.courses.map( (course, index) => 
+        {/* Sidebar */}
+        <Sidebar courseName={this.props.params}> 
+          <ul style={ {listStyle: 'none', textAlign: 'left', paddingLeft: '25px'} }>
+            <h4> { this.props.courses.find( course => course._id === this.props.match.params.courseId ) ? this.props.courses.find( course => course._id === this.props.match.params.courseId ).name : '' /* this selected should be refactored and moved to matchStateToProps() */ }</h4>
+
+            { (!this.props.match.params.courseId || this.props.match.params.courseId === '') && // Sidebar for home page
+              this.props.courses.map( (course, index) => 
+              (
+                <li key={index}> <NavLink to={`/courses/${course._id}`}>{course.name}</NavLink> </li>
+              ) ) 
+            }
+            { this.props.match.params.courseId && this.props.match.params.courseId !== '' && // Sidebar for course/courseItem pages
+                this.props.courseItems.map( (courseItem, index) => 
                 (
-                  <li key={index}> <NavLink to={`/courses/${course._id}`}>{course.name}</NavLink> </li>
-                ) ) 
-              }
-              { this.props.match.params.courseId && this.props.match.params.courseId !== '' && // Sidebar for course/courseItem pages
-                  this.props.courseItems.map( (courseItem, index) => 
-                  (
 
-                    <li key={courseItem.id} onClick={ 
-                      () => this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) && courseItem.type !== 'quiz' ? this.props.dispatch( fetchCompleteCourseItem(courseItem.id) ) : null /* complete (non-quiz) course item if user is student */ 
-                    }> 
-                      <NavLink style={ courseItem.id === this.props.match.params.courseItemId ? {color: 'red'} : {} } to={`/courses/${this.props.match.params.courseId}/${courseItem.id}`} >
-                        <span style={ courseItem.parentCourseItemId ? {marginLeft: '15px'} : {} }> {courseItem.title} </span> 
-                      </NavLink> 
-                    </li>
-                  ) )
-              }
-            </ul>
-          </Sidebar>          
+                  <li key={courseItem.id} onClick={ 
+                    () => this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) && courseItem.type !== 'quiz' ? this.props.dispatch( fetchCompleteCourseItem(courseItem.id) ) : null /* complete (non-quiz) course item if user is student */ 
+                  }> 
+                    <NavLink style={ courseItem.id === this.props.match.params.courseItemId ? {color: 'red'} : {} } to={`/courses/${this.props.match.params.courseId}/${courseItem.id}`} >
+                      <span style={ courseItem.parentCourseItemId ? {marginLeft: '15px'} : {} }> {courseItem.title} </span> 
+                    </NavLink> 
+                  </li>
+                ) )
+            }
+          </ul>
+        </Sidebar>          
 
-
-        <nav className='navLinks'>
-          <NavLink to='/test'>Test Page</NavLink>
-        </nav>
-
+        {/* session role banner */}
         <header>
           <span className='sessionStatus'>{ this.props.session.sessionId ? `Logged in with role '${this.props.session.role}'` : 'Logged Out' }</span>
           { this.props.session.sessionId &&  // only render logout button if logged in
@@ -72,8 +73,8 @@ class App extends React.Component {
           }
         </header>
 
+        {/* main content area */}
         <main className='main'>
-
           { this.props.match.url === '/' &&
             <section className='homeBanner'>
               <h1>Welcome</h1>

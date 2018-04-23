@@ -15,7 +15,11 @@ export function fetchTests(requiresAuthentication) /* exported functions beginni
 	}
 }
 
-// signup
+// ui 
+export const SET_ARCHITECTURE_LEVEL = 'SET_ARCHITECTURE_LEVEL'
+export function setArchitectureLevel(architectureLevel) { return { type: SET_ARCHITECTURE_LEVEL, architectureLevel } }
+
+// session: signup
 export const REQUEST_SIGNUP = 'REQUEST_SIGNUP'
 export const RECEIVE_SIGNUP = 'RECEIVE_SIGNUP'
 
@@ -31,12 +35,12 @@ export function fetchSignup(email, password)
 	}
 }
 
-// login
+// session: login
 export const REQUEST_LOGIN = 'LOGIN'
 export const RECEIVE_LOGIN ='RECEIVE_LOGIN'
 
 function requestLogin() {	return { type: REQUEST_LOGIN } }
-function receiveLogin(data) { return { type: RECEIVE_LOGIN, message: data.message, session: data.session, completedCourseItems: data.completedCourseItems } }
+function receiveLogin(data) { return { type: RECEIVE_LOGIN, message: data.message, session: data.session, completedCourseItems: data.completedCourseItems, assignedCourseItems: data.assignedCourseItems } }
 export function fetchLogin(email, password)
 {
 	return dispatch =>
@@ -53,7 +57,7 @@ export function fetchLogin(email, password)
 	}
 }
 
-// logout
+// session: logout
 export const REQUEST_LOGOUT = 'REQUEST_LOGOUT'
 export const RECEIVE_LOGOUT = 'RECEIVE_LOGOUT'
 

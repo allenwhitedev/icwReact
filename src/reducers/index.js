@@ -5,12 +5,21 @@ import {
 	REQUEST_LOGIN, RECEIVE_LOGIN, 
 	REQUEST_LOGOUT, RECEIVE_LOGOUT,
 	RECEIVE_REFRESH_SESSION, // *tba: session is refreshed by any authenticated request that succeeds
+	SET_ARCHITECTURE_LEVEL
 } from '../actions.js'
 // import reducers
 import tests from './tests'
 import {courses, courseItems} from './courses'
 import users from './users'
 import problems from './problems'
+
+const entities = combineReducers({
+	courses, 
+	courseItems,
+	problems,
+	tests, 
+	users
+})
 
 function session(state, action)
 {
@@ -51,16 +60,20 @@ function session(state, action)
 	}
 }
 
-const entities = combineReducers({
-	courses, 
-	courseItems,
-	problems,
-	tests, 
-	users
-})
+function ui(state = {architectureLevel: 'Workshop'}, action)
+{
+	switch (action.type)
+	{
+		case SET_ARCHITECTURE_LEVEL:
+			return { ...state, architectureLevel: action.architectureLevel }
+		default:
+			return state
+	}
+}
 
 const rootReducer = combineReducers({
 	entities,
-	session
+	session,
+	ui
 }) 
 export default rootReducer

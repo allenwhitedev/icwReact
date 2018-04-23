@@ -24,17 +24,19 @@ class Sidebar extends React.Component
 				
 				{this.props.children}
 				
-				<form onSubmit={ e =>
-				{
-					e.preventDefault()
+				{ !this.props.session.role === 'student' && // do not allow students to create courses
+					<form onSubmit={ e =>
+					{
+						e.preventDefault()
 
-					let courseName = e.target.newCourse.value
-					this.props.fetchAddCourseSubmit( courseName )
-					e.target.newCourse.value = '' // reset course input after submit
-				}  }>
-					<input name='newCourse' type='text' placeholder='New Course...' minLength='4' maxLength='24' />
-					<button type='submit'>Add</button>
-				</form>
+						let courseName = e.target.newCourse.value
+						this.props.fetchAddCourseSubmit( courseName )
+						e.target.newCourse.value = '' // reset course input after submit
+					}  }>
+						<input name='newCourse' type='text' placeholder='New Course...' minLength='4' maxLength='24' />
+						<button type='submit'>Add</button>
+					</form>
+				}	
 			</div>
 		)
 	}

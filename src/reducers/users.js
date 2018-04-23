@@ -19,8 +19,11 @@ function byId(state = getCachedById(), action)
 	switch (action.type)
 	{
 		case RECEIVE_LOGIN:
-		 	localStorage.setItem('completedCourseItems', JSON.stringify(action.completedCourseItems) ) // cache completed course items when logging in
-			return { ...state, [action.session.userId]: { completedCourseItems: action.completedCourseItems } }
+			// cache completed & assigned course items when logging in
+		 	localStorage.setItem('completedCourseItems', JSON.stringify(action.completedCourseItems) ) 
+		 	localStorage.setItem('assignedCourseItems', JSON.stringify(action.assignedCourseItems) )
+
+			return { ...state, [action.session.userId]: { completedCourseItems: action.completedCourseItems, assignedCourseItems: action.assignedCourseItems } }
 		case RECEIVE_COMPLETE_COURSE_ITEM:
 			let completedCourseItems = [ ...state[action.userId].completedCourseItems, action.completedCourseItem]
 			localStorage.setItem('completedCourseItems', JSON.stringify(completedCourseItems) ) // cache completed course item 
@@ -53,7 +56,8 @@ function getCachedById()
 {
 	let userId = localStorage.getItem('userId')
 	let completedCourseItems = JSON.parse( localStorage.getItem('completedCourseItems') ) || []
-	return userId ? { [userId]: {completedCourseItems} } : {}
+	let assignedCourseItems = JSON.parse( localStorage.getItem('assignedCourseItems') ) || []
+	return userId ? { [userId]: {completedCourseItems, assignedCourseItems} } : {}
 }
 function getCachedAllIds()
 {
