@@ -10,6 +10,7 @@ import {
 import tests from './tests'
 import {courses, courseItems} from './courses'
 import users from './users'
+import problems from './problems'
 
 function session(state, action)
 {
@@ -51,9 +52,10 @@ function session(state, action)
 }
 
 const entities = combineReducers({
-	tests, 
 	courses, 
 	courseItems,
+	problems,
+	tests, 
 	users
 })
 

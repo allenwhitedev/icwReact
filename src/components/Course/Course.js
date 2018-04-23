@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { fetchAddCourseItem } from '../../actions.js'
 import { NavLink } from 'react-router-dom'
 import CKEditor from '../CKEditor/CKEditor.js'
+import QuizEditor from '../QuizEditor/QuizEditor'
 
 let Course = ({
 	courseId, 
@@ -25,7 +26,10 @@ let Course = ({
 		</ul>
 
 		{ sessionRole === 'teacher' && // only display CKEditor if user has role 'teacher'
-    	<CKEditor fetchAddCourseItemClick={ fetchAddCourseItemClick } />
+    	<section className='courseItemEditors'>
+    		<CKEditor fetchAddCourseItemClick={ fetchAddCourseItemClick } /> 
+    		<QuizEditor fetchAddCourseItemClick={ fetchAddCourseItemClick } courseItemId='' />
+    	</section>
   	}
 	</div>
 )

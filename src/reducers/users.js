@@ -52,7 +52,7 @@ function allIds(state = getCachedAllIds(), action)
 function getCachedById() 
 {
 	let userId = localStorage.getItem('userId')
-	let completedCourseItems = JSON.parse( localStorage.getItem('completedCourseItems') )
+	let completedCourseItems = JSON.parse( localStorage.getItem('completedCourseItems') ) || []
 	return userId ? { [userId]: {completedCourseItems} } : {}
 }
 function getCachedAllIds()
@@ -61,10 +61,14 @@ function getCachedAllIds()
 	return userId ? [userId] : []
 }
 
-// selector
+// selectors
 export function isCourseItemCompleted(users, courseItemId, userId)
 {
 	return users.byId[userId].completedCourseItems.find( courseItem => courseItem.courseItemId === courseItemId ) ? true : false
+}
+export function isCourseItemCompletedGivenCompletedCourseItems(completedCourseItems, courseItemId)
+{
+	return completedCourseItems.find( courseItem => courseItem.courseItemId === courseItemId ) ? true : false 
 }
 
 const users = combineReducers({

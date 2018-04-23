@@ -49,7 +49,7 @@ class App extends React.Component {
                   (
 
                     <li key={courseItem.id} onClick={ 
-                      () => this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) ? this.props.dispatch( fetchCompleteCourseItem(courseItem.id) ) : null /* complete course it if student */ 
+                      () => this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) && courseItem.type !== 'quiz' ? this.props.dispatch( fetchCompleteCourseItem(courseItem.id) ) : null /* complete (non-quiz) course item if user is student */ 
                     }> 
                       <NavLink style={ courseItem.id === this.props.match.params.courseItemId ? {color: 'red'} : {} } to={`/courses/${this.props.match.params.courseId}/${courseItem.id}`} >
                         <span style={ courseItem.parentCourseItemId ? {marginLeft: '15px'} : {} }> {courseItem.title} </span> 

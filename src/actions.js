@@ -174,7 +174,7 @@ export const RECEIVE_COMPLETE_COURSE_ITEM = 'RECEIVE_COMPLETE_COURSE_ITEM'
 function requestUsers() { return { type: REQUEST_USERS } }
 function receiveUsers(data) { return { type: RECEIVE_USERS, users: data} }
 function requestCompleteCourseItem(courseItemId) { return { type: REQUEST_COMPLETE_COURSE_ITEM, courseItemId} }
-function receiveCompleteCourseItem(data, courseItemId, userId) { return { type: RECEIVE_COMPLETE_COURSE_ITEM, userId, completedCourseItem: { courseItemId, completedAt: data.completedAt } } }
+function receiveCompleteCourseItem(data, courseItemId, userId, grade) { return { type: RECEIVE_COMPLETE_COURSE_ITEM, userId, completedCourseItem: { courseItemId, completedAt: data.completedAt, grade } } }
 
 export function fetchUsers()
 {
@@ -188,7 +188,7 @@ export function fetchUsers()
 			.catch( error => alert(`Error: Could not fetch users. ${error}`) )
 	}
 }
-export function fetchCompleteCourseItem(courseItemId)
+export function fetchCompleteCourseItem(courseItemId, grade)
 {
 	return (dispatch, getState) =>
 	{
@@ -196,8 +196,24 @@ export function fetchCompleteCourseItem(courseItemId)
 		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
 
 		dispatch( requestCompleteCourseItem(courseItemId) )
-		fetch(`${apiUrl}/users/completedCourseItems`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({courseItemId}) })
-			.then( response => response.json() ).then( data => dispatch( receiveCompleteCourseItem(data, courseItemId, session.userId) ) )
+		fetch(`${apiUrl}/users/completedCourseItems`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({courseItemId, grade}) })
+			.then( response => response.json() ).then( data => dispatch( receiveCompleteCourseItem(data, courseItemId, session.userId, grade) ) )
 			.catch( error => alert(`Error: Could not complete course item with id '${courseItemId}. ${error}'`) )
 	}
 }
+
+// problems
+export const ADD_PROBLEM = 'ADD_PROBLEM'
+export const REMOVE_PROBLEM = 'REMOVE_PROBLEM'
+export const EDIT_PROBLEM_QUESTION = 'EDIT_PROBLEM_QUESTION'
+export const ADD_PROBLEM_OPTION = 'ADD_PROBLEM_OPTION'
+export const REMOVE_PROBLEM_OPTION = 'REMOVE_PROBLEM_OPTION'
+export const RECEIVE_PROBLEMS = 'RECEIVE_PROBLEMS'
+export const EDIT_PROBLEM_CORRECT_OPTION_INDEX = 'EDIT_PROBLEM_CORRECT_OPTION_INDEX'
+
+export function addProblem(problem) { return { type: ADD_PROBLEM, problem } }
+export function removeProblem(problemId) { return { type: REMOVE_PROBLEM, problemId } }
+export function editProblemQuestion(problemId, question) { return { type: EDIT_PROBLEM_QUESTION, problemId, question} }
+export function addProblemOption(problemId, option) { return { type: ADD_PROBLEM_OPTION, problemId, option } }
+export function removeProblemOption(problemId, option) { return { type: REMOVE_PROBLEM_OPTION, problemId, option } }
+export function editProblemCorrectOptionIndex(problemId, correctOptionIndex) { return { type: EDIT_PROBLEM_CORRECT_OPTION_INDEX, problemId, correctOptionIndex } }
