@@ -8,12 +8,12 @@ const Navbar = ({architectureLevel, setArchitectureLevelClick}) =>
 	<nav className='Navbar'>
 		<ul className='architectureLevels'>
 			<li 
-				className={ architectureLevel === 'Workshop' ? 'activeArchitectureLevel' : '' }
-				onClick={ () => setArchitectureLevelClick('Workshop') }> Workshop </li>
-			<li className={ architectureLevel === 'Workbench' ? 'activeArchitectureLevel' : '' }
-				onClick={ () => setArchitectureLevelClick('Workbench') }> Workbench </li>
-			<li className={ architectureLevel === 'Testbench' ? 'activeArchitectureLevel' : '' }
-				onClick={ () => setArchitectureLevelClick('Testbench') }> Testbench </li>
+				className={ architectureLevel === 'WorkShop' ? 'activeArchitectureLevel' : '' }
+				onClick={ () => setArchitectureLevelClick('WorkShop') }> WorkShop </li>
+			<li className={ architectureLevel === 'WorkBench' ? 'activeArchitectureLevel' : '' }
+				onClick={ () => setArchitectureLevelClick('WorkBench') }> WorkBench </li>
+			<li className={ architectureLevel === 'TestBench' ? 'activeArchitectureLevel' : '' }
+				onClick={ () => setArchitectureLevelClick('TestBench') }> TestBench </li>
 		</ul>
 		<select defaultValue='Mentor' onChange={e => console.log('tba popup mentor courseItem', e.target.value)}>
 			<option>Mentor</option>

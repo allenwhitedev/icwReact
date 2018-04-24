@@ -9,9 +9,10 @@ import Login from '../Login/Login.js'
 import Sidebar from '../Sidebar/Sidebar.js'
 import Course from '../Course/Course.js'
 import Navbar from '../Navbar/Navbar.js'
+import WorkShop from '../WorkShop/WorkShop.js'
+import TestBench from '../TestBench/TestBench.js'
 import { fetchCompleteCourseItem, fetchUsers } from '../../actions'
 import { isCourseItemCompleted } from '../../reducers/users'
-import { getCourseItemTitleById } from '../../reducers/courses'
 
 class App extends React.Component {
 
@@ -75,23 +76,13 @@ class App extends React.Component {
 
         {/* main content area */}
         <main className='main'>
-          { this.props.match.url === '/' &&
-            <section className='homeBanner'>
-              <h1>Welcome</h1>
-              <h2>This is the home page.</h2>
 
-              { this.props.session.role === 'teacher' && // display all users on home page if user is 'teacher'
-                <ul className='usersList'>
-                  { this.props.users.allIds.map( userId => ( 
-                    <li key={userId}> 
-                      <b>{userId}: </b>
-                      { this.props.users.byId[userId].completedCourseItems.map( completedCourseItem => `['${ getCourseItemTitleById(this.props.courseItems, completedCourseItem.courseItemId) }', completed: ${new Date(completedCourseItem.completedAt)}]` ) } 
-                    </li> 
-                    ) ) }
-                </ul>            
-              }
-    
-            </section>
+          { this.props.architectureLevel === 'WorkShop' && this.props.session.role === 'teacher' && // display all users if user is 'teacher'
+            <WorkShop courseItems={this.props.courseItems} />           
+          }
+
+          { this.props.architectureLevel === 'TestBench' && this.props.session.role === 'teacher' &&
+            <TestBench />
           }
 
           { ( this.props.match.path.includes('/courses') && this.props.location.pathname.match( new RegExp('/', 'g') ).length < 3 )  &&
@@ -167,7 +158,8 @@ const mapStateToProps = (state, ownProps) => {
     session: state.session,
     courses: state.entities.courses.allIds.map( id => state.entities.courses.byId[id] ),
     courseItems: orderedCourseItems,
-    users: state.entities.users
+    users: state.entities.users,
+    architectureLevel: state.ui.architectureLevel
   }
 }
 

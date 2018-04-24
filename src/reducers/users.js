@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { RECEIVE_LOGIN, REQUEST_USERS, RECEIVE_USERS, RECEIVE_COMPLETE_COURSE_ITEM  } from '../actions'
+import { RECEIVE_LOGIN, REQUEST_USERS, RECEIVE_USERS, RECEIVE_COMPLETE_COURSE_ITEM, RECEIVE_ASSIGN_COURSE_ITEM } from '../actions'
 
 function isFetching(state = false, action)
 {
@@ -33,6 +33,14 @@ function byId(state = getCachedById(), action)
 			for ( let i in action.users )
 				byId[action.users[i]._id] = { ...action.users[i]  }
 			return byId
+		case RECEIVE_ASSIGN_COURSE_ITEM:
+			return {
+				...state,
+				[action.userId]: { 
+					...state[action.userId],
+					assignedCourseItems: [...state[action.userId].assignedCourseItems, action.assignedCourseItem]
+				}
+			}
 		default:
 			return state	
 	}

@@ -17,7 +17,10 @@ export function fetchTests(requiresAuthentication) /* exported functions beginni
 
 // ui 
 export const SET_ARCHITECTURE_LEVEL = 'SET_ARCHITECTURE_LEVEL'
+export const SET_SEARCH = 'SET_SEARCH'
+
 export function setArchitectureLevel(architectureLevel) { return { type: SET_ARCHITECTURE_LEVEL, architectureLevel } }
+export function setSearch(search) { return { type: SET_SEARCH, search } }
 
 // session: signup
 export const REQUEST_SIGNUP = 'REQUEST_SIGNUP'
@@ -174,11 +177,15 @@ export const REQUEST_USERS = 'REQUEST_USERS'
 export const RECEIVE_USERS = 'RECEIVE_USERS'
 export const REQUEST_COMPLETE_COURSE_ITEM = 'REQUEST_COMPLETE_COURSE_ITEM'
 export const RECEIVE_COMPLETE_COURSE_ITEM = 'RECEIVE_COMPLETE_COURSE_ITEM'
+export const REQUEST_ASSIGN_COURSE_ITEM = 'REQUEST_ASSIGN_COURSE_ITEM'
+export const RECEIVE_ASSIGN_COURSE_ITEM = 'RECEIVE_ASSIGN_COURSE_ITEM'
 
 function requestUsers() { return { type: REQUEST_USERS } }
 function receiveUsers(data) { return { type: RECEIVE_USERS, users: data} }
 function requestCompleteCourseItem(courseItemId) { return { type: REQUEST_COMPLETE_COURSE_ITEM, courseItemId} }
 function receiveCompleteCourseItem(data, courseItemId, userId, grade) { return { type: RECEIVE_COMPLETE_COURSE_ITEM, userId, completedCourseItem: { courseItemId, completedAt: data.completedAt, grade } } }
+function requestAssignCourseItem(courseItemId) { return { type: REQUEST_ASSIGN_COURSE_ITEM, courseItemId } }
+function receiveAssignCourseItem(data, courseItemId, userId) { return { type: RECEIVE_ASSIGN_COURSE_ITEM, userId, assignedCourseItem: { courseItemId, assignedAt: data.assignedAt } } }
 
 export function fetchUsers()
 {
@@ -202,6 +209,19 @@ export function fetchCompleteCourseItem(courseItemId, grade)
 		dispatch( requestCompleteCourseItem(courseItemId) )
 		fetch(`${apiUrl}/users/completedCourseItems`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({courseItemId, grade}) })
 			.then( response => response.json() ).then( data => dispatch( receiveCompleteCourseItem(data, courseItemId, session.userId, grade) ) )
+			.catch( error => alert(`Error: Could not complete course item with id '${courseItemId}. ${error}'`) )
+	}
+}
+export function fetchAssignCourseItem(courseItemId, userId)
+{
+	return (dispatch, getState) =>
+	{
+		let session = getState().session
+		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
+
+		dispatch( requestAssignCourseItem(courseItemId) )
+		fetch(`${apiUrl}/users/assignedCourseItems`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({courseItemId, userId}) })
+			.then( response => response.json() ).then( data => dispatch( receiveAssignCourseItem(data, courseItemId, userId) ) )
 			.catch( error => alert(`Error: Could not complete course item with id '${courseItemId}. ${error}'`) )
 	}
 }

@@ -5,7 +5,7 @@ import {
 	REQUEST_LOGIN, RECEIVE_LOGIN, 
 	REQUEST_LOGOUT, RECEIVE_LOGOUT,
 	RECEIVE_REFRESH_SESSION, // *tba: session is refreshed by any authenticated request that succeeds
-	SET_ARCHITECTURE_LEVEL
+	SET_ARCHITECTURE_LEVEL, SET_SEARCH // ui
 } from '../actions.js'
 // import reducers
 import tests from './tests'
@@ -60,12 +60,14 @@ function session(state, action)
 	}
 }
 
-function ui(state = {architectureLevel: 'Workshop'}, action)
+function ui(state = {architectureLevel: 'WorkShop', search: ''}, action)
 {
 	switch (action.type)
 	{
 		case SET_ARCHITECTURE_LEVEL:
 			return { ...state, architectureLevel: action.architectureLevel }
+		case SET_SEARCH:
+			return { ...state, search: action.search }
 		default:
 			return state
 	}

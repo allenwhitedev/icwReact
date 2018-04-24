@@ -5,7 +5,17 @@
 #mytextarea { min-width: 300px; }
 .coursePost { font-size: 1.5rem; }
 .marginTop100px { margin-top: 100px; }
-.main { padding-left: 300px;  }
+.main { padding-left: 300px; margin-top: 80px; position: absolute; top: 0; left: 0; width: 100%; }
+
+/* users list (for teachers - WorkShop/TestBench) */
+.usersList { list-style: none; }
+.usersList > li { margin: 15px; border: 2px solid #424242; padding: 15px; }
+.usersCourseItemsList { text-align: left; }
+.userEmail { text-align: left; }
+.courseItemsListItem { margin: auto 3px; }
+.courseItemSearchResults { list-style: none; display: flex; justify-content: space-around; padding: 5px; }
+.courseItemSearchResults > li { cursor: pointer; border: 1px solid #424242; padding: 3px; }
+.courseItemSearchResults > li:hover { border: 1px solid blue; color: blue; }
 
 /* global */
 .green { color: green; }

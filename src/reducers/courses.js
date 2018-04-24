@@ -91,6 +91,15 @@ export function getCourseItemTitleById(courseItems, courseItemId)
   let courseItem = courseItems.find( courseItem => courseItem.id === courseItemId )
   return courseItem ? courseItem.title : ''
 }
+export function getCourseIdFromCourseItemId(courseItemId, courses) 
+{
+	console.log('courseItemId:', courseItemId)
+	console.log('courses:', courses)
+	let course = courses.allIds.map( id => courses.byId[id] ).find( course => { console.log('courseFind:', course._id); return course._id === courseItemId } )
+	console.log('course:', course)
+	if ( course )
+		return course._id
+}
 
 export const courseItems = combineReducers({ // course items reducer
 	isFetching,
