@@ -82,7 +82,7 @@ class App extends React.Component {
           }
 
           { this.props.architectureLevel === 'TestBench' && this.props.session.role === 'teacher' &&
-            <TestBench />
+            <TestBench courseItems={this.props.courseItems} />
           }
 
           { ( this.props.match.path.includes('/courses') && this.props.location.pathname.match( new RegExp('/', 'g') ).length < 3 )  &&

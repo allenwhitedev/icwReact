@@ -82,6 +82,22 @@ export function isCourseItemCompletedGivenCompletedCourseItems(completedCourseIt
 {
 	return completedCourseItems.find( courseItem => courseItem.courseItemId === courseItemId ) ? true : false 
 }
+export function getCourseItemIdsByType(courseItems, type)
+{
+	return courseItems.filter( courseItem => courseItem.type === type ).map( courseItem => courseItem.id )
+}
+export function getGradeColor(grade)
+{
+	if ( grade >= .8)
+		return 'green'
+	else if ( grade >= .7 )
+		return '#424242' // black
+	else if ( grade >= .5 )
+		return '#EF5350' // light red
+	else
+		return 'red' // dark red
+}
+
 
 const users = combineReducers({
 	isFetching,

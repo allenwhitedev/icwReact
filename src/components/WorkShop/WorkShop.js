@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { getCourseItemTitleById } from '../../reducers/courses'
 import { Link } from 'react-router-dom'
 import { setSearch, fetchAssignCourseItem } from '../../actions'
+import { getCourseItemIdsByType } from '../../reducers/users'
 
 const WorkShop = ({sessionRole, users, courseItems, search, setSearchSubmit, fetchAssignCourseItemSubmit}) =>
 (
@@ -18,20 +19,23 @@ const WorkShop = ({sessionRole, users, courseItems, search, setSearchSubmit, fet
 	          
 	          {/* TaskList (Completed - completedCourseItems) */}
 	          <span>TaskList (Completed): </span>
-	          { user.completedCourseItems.sort((a,b) => (a.completedAt - b.completedAt) ).map( (completedCourseItem, index) => (
+	          { user.completedCourseItems.filter( compCourseItem => getCourseItemIdsByType(courseItems, 'lesson').includes(compCourseItem.courseItemId) ).sort((a,b) => (a.completedAt - b.completedAt) ).map( (completedCourseItem, index) => (
 	          	<Link to={`/courses/${courseItems.find( courseItem => courseItem.id === completedCourseItem.courseItemId ) ? courseItems.find(courseItem => courseItem.id === completedCourseItem.courseItemId ).courseId : ''}/${completedCourseItem.courseItemId}`} 
 	          		key={completedCourseItem.courseItemId}> 
-	          		<span className='courseItemsListItem'>{ getCourseItemTitleById(courseItems, completedCourseItem.courseItemId) }{index >= user.completedCourseItems.length - 1 ? null : ','}</span>
+	          		<span className='courseItemsListItem'>{ getCourseItemTitleById(courseItems, completedCourseItem.courseItemId) }{index >= user.completedCourseItems.filter( compCourseItem => getCourseItemIdsByType(courseItems, 'quiz').includes(compCourseItem.courseItemId) ).length - 1 ? null : ','}</span>
 	          	</Link>
 	          	) ) 
 	        	}
 	        	<hr />
 	        	{/* TaskList (Assigned - assignedcourseItems) */}
 	          <span>TaskList (Assigned): </span>
-	          { user.assignedCourseItems.sort((a,b) => (a.assignedAt - b.assignedAt) ).map( (completedCourseItem, index) => (
+	          { user.assignedCourseItems.filter( compCourseItem => getCourseItemIdsByType(courseItems, 'lesson').includes(compCourseItem.courseItemId) ).sort((a,b) => (a.assignedAt - b.assignedAt) ).map( (completedCourseItem, index) => (
 	          	<Link to={`/courses/${courseItems.find( courseItem => courseItem.id === completedCourseItem.courseItemId ) ? courseItems.find(courseItem => courseItem.id === completedCourseItem.courseItemId ).courseId : ''}/${completedCourseItem.courseItemId}`} 
 	          		key={completedCourseItem.courseItemId}> 
-	          		<span className='courseItemsListItem'>{ getCourseItemTitleById(courseItems, completedCourseItem.courseItemId) }{index >= user.assignedCourseItems.length - 1 ? null : ','}</span>
+	          		<span className='courseItemsListItem'>
+	          			{ getCourseItemTitleById(courseItems, completedCourseItem.courseItemId) }
+	          			{index >= user.assignedCourseItems.filter( compCourseItem => getCourseItemIdsByType(courseItems, 'lesson').includes(compCourseItem.courseItemId) ).length - 1 ? null : ','}
+	          		</span>
 	          	</Link>
 	          	) ) 
 	        	}
@@ -41,7 +45,7 @@ const WorkShop = ({sessionRole, users, courseItems, search, setSearchSubmit, fet
 	        	<form>
 	        		<input name='courseItemSearch' onBlur={ e => { setSearchSubmit(''); e.target.value = '' } } onChange={ e => setSearchSubmit(e.target.value) } placeholder="Add to TaskList..." />
 	        		<ul className='courseItemSearchResults'>
-	        			{ courseItems.filter( courseItem => courseItem.title.substring(0, search.length) === search && !user.assignedCourseItems.find( assignedCourseItem => assignedCourseItem.courseItemId === courseItem.id) ).slice(0,4).map( searchResult => (
+	        			{ courseItems.filter( courseItem => courseItem.title.substring(0, search.length) === search && !user.assignedCourseItems.find( assignedCourseItem => assignedCourseItem.courseItemId === courseItem.id) && courseItem.type === 'lesson' ).slice(0,4).map( searchResult => (
 	        					<li onMouseDown={ () => fetchAssignCourseItemSubmit(searchResult.id, user._id) } key={searchResult.id}>{searchResult.title}</li>
 	        				) )
 	        			}
