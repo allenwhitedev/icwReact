@@ -11,6 +11,7 @@ import Course from '../Course/Course.js'
 import Navbar from '../Navbar/Navbar.js'
 import WorkShop from '../WorkShop/WorkShop.js'
 import TestBench from '../TestBench/TestBench.js'
+import WorkBench from '../WorkBench/WorkBench.js'
 import { fetchCompleteCourseItem, fetchUsers } from '../../actions'
 import { isCourseItemCompleted } from '../../reducers/users'
 
@@ -96,6 +97,27 @@ class App extends React.Component {
           { this.props.architectureLevel === 'TestBench' && !this.props.match.params.courseId &&
             <TestBench courseItems={this.props.courseItems} />
           }
+
+          { this.props.architectureLevel === 'WorkBench' && !this.props.match.params.courseId &&
+            <WorkBench>
+              <ul style={ {listStyle: 'none'} }>
+                { (!this.props.match.params.courseId || this.props.match.params.courseId === '') && // List of courses (Projects) for home page
+                  this.props.courses.map( (course, index) => 
+                  (
+                    <li className='card margin5px' key={index}> 
+                      <NavLink to={`/courses/${course._id}`}>{course.name}</NavLink> 
+                      <br />
+                      { this.props.allCourseItems.filter( courseItem => courseItem.courseId === course._id ).map( courseItem => (
+                          <span key={courseItem.id}>{courseItem.title}</span>
+                        ) )
+                      }
+                    </li>
+                  ) ) 
+                }
+              </ul>
+            </WorkBench>
+          }
+
 
           { ( this.props.match.path.includes('/courses') && this.props.location.pathname.match( new RegExp('/', 'g') ).length < 3 )  &&
             <Course courseId={ this.props.match.params.courseId }>
@@ -187,7 +209,8 @@ const mapStateToProps = (state, ownProps) => {
     courses: state.entities.courses.allIds.map( id => state.entities.courses.byId[id] ),
     courseItems: orderedCourseItems,
     users: state.entities.users,
-    architectureLevel: state.ui.architectureLevel
+    architectureLevel: state.ui.architectureLevel,
+    allCourseItems: state.entities.courseItems.allIds.map( id => state.entities.courseItems.byId[id] )
   }
 }
 
