@@ -102,7 +102,7 @@ const TestBench = ({sessionRole, users, courseItems, search, currentUser, course
 			    		</span>
 			    	</Link>
 
-			    	<h6>Grade: <span style={ {color: getGradeColor(completedCourseItem.grade)} }>{ completedCourseItem.grade }%</span></h6>
+			    	<h6>Grade: <span style={ {color: getGradeColor(completedCourseItem.grade)} }>{ completedCourseItem.grade * 100 }%</span></h6>
 		    	</li>
 		    	) ) 
 		  	}

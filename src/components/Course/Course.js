@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { fetchAddCourseItem } from '../../actions.js'
-import { NavLink } from 'react-router-dom'
 import CKEditor from '../CKEditor/CKEditor.js'
 import QuizEditor from '../QuizEditor/QuizEditor'
 

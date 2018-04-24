@@ -42,7 +42,8 @@ class App extends React.Component {
 
   completeCourseItemSubmit(courseItem)
   {
-    this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) && courseItem.type !== 'quiz' ? this.props.dispatch( fetchCompleteCourseItem(courseItem.id) ) : null
+    if (this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) && courseItem.type !== 'quiz')  
+      this.props.dispatch( fetchCompleteCourseItem(courseItem.id) )
   }
 
   render() {
