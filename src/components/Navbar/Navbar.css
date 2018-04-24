@@ -7,4 +7,6 @@
 }
 .architectureLevels { list-style: none; display: flex; margin-right: auto; align-items: center; padding-left: 0px; font-size: 1.75rem; height: 100%; }
 .architectureLevels > li { height: 100%; padding-left: 15px; padding-right: 15px; display: flex; align-items: center; cursor: pointer; }
-.activeArchitectureLevel { color: blue; }
+.activeArchitectureLevel, .activeArchitectureLevel > * { color: blue; }
+.inactiveArchitectureLevel > * { color: black; }
+.blueHover:hover { color: #007bff; }

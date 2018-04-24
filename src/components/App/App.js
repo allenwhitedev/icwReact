@@ -16,6 +16,13 @@ import { isCourseItemCompleted } from '../../reducers/users'
 
 class App extends React.Component {
 
+  constructor(props)
+  {
+    super(props)
+
+    this.completeCourseItemSubmit = this.completeCourseItemSubmit.bind(this) // used in WorkShop & Sidebar to complete course items by students
+  }
+
   componentWillMount()
   {
     if ( this.props.history.location.pathname === '/login' ) // redirect to home page after logging in
@@ -32,6 +39,11 @@ class App extends React.Component {
       this.props.dispatch( fetchUsers() )
   }
 
+  completeCourseItemSubmit(courseItem)
+  {
+    this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) && courseItem.type !== 'quiz' ? this.props.dispatch( fetchCompleteCourseItem(courseItem.id) ) : null
+  }
+
   render() {
     return (
       <div className="App">
@@ -40,7 +52,7 @@ class App extends React.Component {
         <Navbar />
 
         {/* Sidebar */}
-        <Sidebar courseName={this.props.params}> 
+        <Sidebar courseName={this.props.params} courseId={ this.props.match.params.courseId }> 
           <ul style={ {listStyle: 'none', textAlign: 'left', paddingLeft: '25px'} }>
             <h4> { this.props.courses.find( course => course._id === this.props.match.params.courseId ) ? this.props.courses.find( course => course._id === this.props.match.params.courseId ).name : '' /* this selected should be refactored and moved to matchStateToProps() */ }</h4>
 
@@ -55,7 +67,7 @@ class App extends React.Component {
                 (
 
                   <li key={courseItem.id} onClick={ 
-                    () => this.props.session.role === 'student' && !isCourseItemCompleted(this.props.users, courseItem.id, this.props.session.userId) && courseItem.type !== 'quiz' ? this.props.dispatch( fetchCompleteCourseItem(courseItem.id) ) : null /* complete (non-quiz) course item if user is student */ 
+                    () => this.completeCourseItemSubmit(courseItem)  /* complete (non-quiz) course item if user is student */ 
                   }> 
                     <NavLink style={ courseItem.id === this.props.match.params.courseItemId ? {color: 'red'} : {} } to={`/courses/${this.props.match.params.courseId}/${courseItem.id}`} >
                       <span style={ courseItem.parentCourseItemId ? {marginLeft: '15px'} : {} }> {courseItem.title} </span> 
@@ -77,16 +89,32 @@ class App extends React.Component {
         {/* main content area */}
         <main className='main'>
 
-          { this.props.architectureLevel === 'WorkShop' && this.props.session.role === 'teacher' && // display all users if user is 'teacher'
+          { this.props.architectureLevel === 'WorkShop' && !this.props.match.params.courseId &&
             <WorkShop courseItems={this.props.courseItems} />           
           }
 
-          { this.props.architectureLevel === 'TestBench' && this.props.session.role === 'teacher' &&
+          { this.props.architectureLevel === 'TestBench' && !this.props.match.params.courseId &&
             <TestBench courseItems={this.props.courseItems} />
           }
 
           { ( this.props.match.path.includes('/courses') && this.props.location.pathname.match( new RegExp('/', 'g') ).length < 3 )  &&
-            <Course courseId={ this.props.match.params.courseId } />
+            <Course courseId={ this.props.match.params.courseId }>
+              <ul style={ {listStyle: 'none'} }>
+                { this.props.match.params.courseId && this.props.match.params.courseId !== '' && // list for course/courseItem pages
+                    this.props.courseItems.map( (courseItem, index) => 
+                    (
+
+                      <li key={courseItem.id} onClick={ 
+                        () => this.completeCourseItemSubmit(courseItem)  /* complete (non-quiz) course item if user is student */ 
+                      }> 
+                        <NavLink style={ courseItem.id === this.props.match.params.courseItemId ? {color: 'red'} : {} } to={`/courses/${this.props.match.params.courseId}/${courseItem.id}`} >
+                          <span style={ courseItem.parentCourseItemId ? {marginLeft: '15px'} : {} }> {courseItem.title} </span> 
+                        </NavLink> 
+                      </li>
+                    ) )
+                }
+              </ul>
+            </Course>
           }
 
           { this.props.match.params.currentComponent === 'test' &&

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { fetchEditCourseItem, fetchAddSubCourseItem, fetchCompleteCourseItem } from '../../actions'
+import { fetchEditCourseItem, fetchAddSubCourseItem, fetchCompleteCourseItem, setArchitectureLevel } from '../../actions'
 import CKEditor from '../CKEditor/CKEditor.js'
 import { isCourseItemCompletedGivenCompletedCourseItems } from '../../reducers/users'
 
@@ -30,7 +30,13 @@ class CourseItem extends React.Component {
 		// all problems had parallel correct answers in local state, complete quiz if not already completed
 		if ( !isCourseItemCompletedGivenCompletedCourseItems(this.props.completedCourseItems, this.props.courseItem.id) ) 
 			this.props.fetchCompleteQuiz(this.props.courseItem.id, ( 1 - ( this.state.numWrongAnswerAttempts / this.props.courseItem.problems.length) ) )
-	}		
+	}	
+
+	componentDidMount()
+	{
+		if ( this.props.architectureLevel !== 'WorkBench' )
+			this.props.setArchitectureLevel('WorkBench')
+	}	
 
 	render()
 	{
@@ -102,13 +108,15 @@ const mapStateToProps = (state, ownProps) => ({
 	sessionRole: state.session.role,
 	courseItem: state.entities.courseItems.byId[ownProps.match.params.courseItemId],
 	location: ownProps.location,
-	completedCourseItems: state.entities.users.byId[state.session.userId].completedCourseItems || []
+	completedCourseItems: state.entities.users.byId[state.session.userId].completedCourseItems || [],
+	architectureLevel: state.ui.architectureLevel
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
 	fetchEditCourseItemClick: (type, content) => dispatch( fetchEditCourseItem(ownProps.match.params.courseId, ownProps.match.params.courseItemId, type, content) ),
 	fetchAddSubCourseItemClick: (type, title, content) => dispatch( fetchAddSubCourseItem(ownProps.match.params.courseId, ownProps.match.params.courseItemId, type, title, content) ),
-	fetchCompleteQuiz: (courseItemId, grade) => dispatch( fetchCompleteCourseItem(courseItemId, grade) )
+	fetchCompleteQuiz: (courseItemId, grade) => dispatch( fetchCompleteCourseItem(courseItemId, grade) ),
+	setArchitectureLevel: architectureLevel => dispatch( setArchitectureLevel(architectureLevel) )
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CourseItem)

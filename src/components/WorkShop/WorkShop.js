@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { setSearch, fetchAssignCourseItem } from '../../actions'
 import { getCourseItemIdsByType } from '../../reducers/users'
 
-const WorkShop = ({sessionRole, users, courseItems, search, setSearchSubmit, fetchAssignCourseItemSubmit}) =>
+const WorkShop = ({sessionRole, users, courseItems, search, currentUser, courses, setSearchSubmit, fetchAssignCourseItemSubmit}) =>
 (
 	<div className='WorkShop'>
 
@@ -58,8 +58,25 @@ const WorkShop = ({sessionRole, users, courseItems, search, setSearchSubmit, fet
 
 	{/* Display list of assigned (non-quiz) course items if student is user*/}
 	{ sessionRole === 'student' &&
-		<ul>
-			<li>Assigned course items (non-quiz) will be enumerated in a list here for students.</li>
+		<ul style={ {listStyle: 'none'} }>
+			<h3>TaskList</h3>
+	    { currentUser.assignedCourseItems.filter( compCourseItem => getCourseItemIdsByType(courseItems, 'lesson').includes(compCourseItem.courseItemId) ).sort((a,b) => (a.assignedAt - b.assignedAt) ).map( (completedCourseItem, index) => (
+	    	<li className='card margin5px' key={completedCourseItem.courseItemId}>
+	    		<h4> Project: &nbsp; 
+	    			<Link to={`/courses/${courses.byId[courseItems.find( courseItem => courseItem.id === completedCourseItem.courseItemId ).courseId] ?  courses.byId[courseItems.find( courseItem => courseItem.id === completedCourseItem.courseItemId ).courseId]._id : ''}`}>
+	    				{ courses.byId[courseItems.find( courseItem => courseItem.id === completedCourseItem.courseItemId ).courseId].name }
+	    			</Link>
+	    		</h4>
+
+	    		Assignment:
+		    	<Link to={`/courses/${courseItems.find( courseItem => courseItem.id === completedCourseItem.courseItemId ) ? courseItems.find(courseItem => courseItem.id === completedCourseItem.courseItemId ).courseId : ''}/${completedCourseItem.courseItemId}`} > 
+		    		<span className='courseItemsListItem'>
+		    			 { getCourseItemTitleById(courseItems, completedCourseItem.courseItemId) }
+		    		</span>
+		    	</Link>
+	    	</li>
+	    	) ) 
+	  	}
 		</ul>
 	}
 
@@ -70,7 +87,9 @@ const mapStateToProps = (state, ownProps) => ({
 	sessionRole: state.session.role,
 	users: state.entities.users.allIds.map( id => state.entities.users.byId[id] ),
 	courseItems: ownProps.courseItems,
-	search: state.ui.search
+	search: state.ui.search,
+	currentUser: state.entities.users.byId[state.session.userId],
+	courses: state.entities.courses
 })
 
 const mapDispatchToProps = dispatch => ({

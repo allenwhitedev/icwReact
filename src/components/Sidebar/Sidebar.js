@@ -22,9 +22,11 @@ class Sidebar extends React.Component
 					<img src='/images/icw-logo-128x90.png' alt='ICW logo'/>
 				</NavLink>
 				
+				<h4>{!this.props.courseId || this.props.courseId === '' ? 'Projects' : ''}</h4>
+
 				{this.props.children}
 				
-				{ !this.props.session.role === 'student' && // do not allow students to create courses
+				{ this.props.session.role === 'teacher' && // do not allow students to create courses
 					<form onSubmit={ e =>
 					{
 						e.preventDefault()
@@ -33,7 +35,7 @@ class Sidebar extends React.Component
 						this.props.fetchAddCourseSubmit( courseName )
 						e.target.newCourse.value = '' // reset course input after submit
 					}  }>
-						<input name='newCourse' type='text' placeholder='New Course...' minLength='4' maxLength='24' />
+						<input name='newCourse' type='text' placeholder='New Project...' minLength='4' maxLength='24' />
 						<button type='submit'>Add</button>
 					</form>
 				}	
@@ -42,8 +44,9 @@ class Sidebar extends React.Component
 	}
 }
 
-const mapStateToProps = state => ({
-	session: state.session
+const mapStateToProps = (state, ownProps) => ({
+	session: state.session,
+	courseId: ownProps.courseId
 })
 
 const mapDispatchToProps = dispatch => ({
