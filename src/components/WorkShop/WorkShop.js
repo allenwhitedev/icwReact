@@ -2,10 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getCourseItemTitleById } from '../../reducers/courses'
 import { Link } from 'react-router-dom'
-import { setSearch, fetchAssignCourseItem } from '../../actions'
+import { setSearch, fetchAssignCourseItem, fetchChangeUserRole } from '../../actions'
 import { getCourseItemIdsByType } from '../../reducers/users'
 
-const WorkShop = ({sessionRole, users, courseItems, search, currentUser, courses, setSearchSubmit, fetchAssignCourseItemSubmit}) =>
+const WorkShop = ({sessionRole, users, courseItems, search, currentUser, courses, setSearchSubmit, fetchAssignCourseItemSubmit, fetchChangeUserRoleSubmit}) =>
 (
 	<div className='WorkShop'>
 
@@ -14,7 +14,13 @@ const WorkShop = ({sessionRole, users, courseItems, search, currentUser, courses
 	    <ul className='usersList'>
 	      { users.map( user => ( 
 	        <li key={`${user._id}`}> 
-	          <h5 className='userEmail'><b> {user.email}</b></h5>
+	          <h5 className='userEmail'>
+	          	<b> {user.email} </b> &nbsp;
+	          	<select value={user.role} onChange={ e => fetchChangeUserRoleSubmit(user._id, e.target.value) }>
+	          		<option>teacher</option>
+	          		<option>student</option>
+	          	</select>
+	          </h5>
 	          <section className='usersCourseItemsList'>
 	          
 	          {/* TaskList (Completed - completedCourseItems) */}
@@ -85,7 +91,7 @@ const WorkShop = ({sessionRole, users, courseItems, search, currentUser, courses
 
 const mapStateToProps = (state, ownProps) => ({
 	sessionRole: state.session.role,
-	users: state.entities.users.allIds.map( id => state.entities.users.byId[id] ),
+	users: state.entities.users.allIds.filter( id => id !== state.session.userId ).map( id => state.entities.users.byId[id] ),
 	courseItems: ownProps.courseItems,
 	search: state.ui.search,
 	currentUser: state.entities.users.byId[state.session.userId],
@@ -94,7 +100,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => ({
 	setSearchSubmit: search => dispatch( setSearch(search) ),
-	fetchAssignCourseItemSubmit: (courseItemId, userId) => dispatch( fetchAssignCourseItem(courseItemId, userId) )
+	fetchAssignCourseItemSubmit: (courseItemId, userId) => dispatch( fetchAssignCourseItem(courseItemId, userId) ),
+	fetchChangeUserRoleSubmit: (userId, role) => dispatch( fetchChangeUserRole(userId, role) )
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WorkShop)

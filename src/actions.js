@@ -179,6 +179,8 @@ export const REQUEST_COMPLETE_COURSE_ITEM = 'REQUEST_COMPLETE_COURSE_ITEM'
 export const RECEIVE_COMPLETE_COURSE_ITEM = 'RECEIVE_COMPLETE_COURSE_ITEM'
 export const REQUEST_ASSIGN_COURSE_ITEM = 'REQUEST_ASSIGN_COURSE_ITEM'
 export const RECEIVE_ASSIGN_COURSE_ITEM = 'RECEIVE_ASSIGN_COURSE_ITEM'
+export const REQUEST_CHANGE_USER_ROLE = 'REQUEST_CHANGE_USER_ROLE' // not used by reducers since dispatch( fetchUsers() ) is called in fetchChangeUserRole
+export const RECEIVE_CHANGE_USER_ROLE = 'RECEIVE_CHANGE_USER_ROLE' // not used by reducers since dispatch( fetchUsers() ) is called in fetchChangeUserRole
 
 function requestUsers() { return { type: REQUEST_USERS } }
 function receiveUsers(data) { return { type: RECEIVE_USERS, users: data} }
@@ -186,6 +188,8 @@ function requestCompleteCourseItem(courseItemId) { return { type: REQUEST_COMPLE
 function receiveCompleteCourseItem(data, courseItemId, userId, grade) { return { type: RECEIVE_COMPLETE_COURSE_ITEM, userId, completedCourseItem: { courseItemId, completedAt: data.completedAt, grade } } }
 function requestAssignCourseItem(courseItemId) { return { type: REQUEST_ASSIGN_COURSE_ITEM, courseItemId } }
 function receiveAssignCourseItem(data, courseItemId, userId) { return { type: RECEIVE_ASSIGN_COURSE_ITEM, userId, assignedCourseItem: { courseItemId, assignedAt: data.assignedAt } } }
+function requestChangeUserRole(userId, role) { return { type: REQUEST_CHANGE_USER_ROLE, userId, role } }
+function receiveChangeUserRole(userId, role) { return { type: RECEIVE_CHANGE_USER_ROLE, userId, role } }
 
 export function fetchUsers()
 {
@@ -223,6 +227,20 @@ export function fetchAssignCourseItem(courseItemId, userId)
 		fetch(`${apiUrl}/users/assignedCourseItems`, {method: 'POST', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({courseItemId, userId}) })
 			.then( response => response.json() ).then( data => dispatch( receiveAssignCourseItem(data, courseItemId, userId) ) )
 			.catch( error => alert(`Error: Could not complete course item with id '${courseItemId}. ${error}'`) )
+	}
+}
+export function fetchChangeUserRole(userId, role)
+{
+	return (dispatch, getState) =>
+	{
+		let session = getState().session
+		let sessionCookie = `sessionId=${session.sessionId}; userId=${session.userId};`
+
+		dispatch( requestChangeUserRole(userId, role) )
+		fetch(`${apiUrl}/users/role`, {method: 'PATCH', headers: {'Content-Type': 'application/json', 'Session': sessionCookie}, body: JSON.stringify({userId, role})} )
+			.then( response => response.json() ).then( data => { dispatch(receiveChangeUserRole); dispatch(fetchUsers() ) } )
+			.catch( error => alert(`Error: Could not change user role to '${role}' for user with id '${userId}. ${error}'`) )
+
 	}
 }
 
